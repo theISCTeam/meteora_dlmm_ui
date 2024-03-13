@@ -44,7 +44,7 @@ export const Header = () => {
         <header>
             <div className='headerBrand'>
                 <img src='./logo.png' className='logo'/>
-                <h1>ISC LABS - Meteora DLMM Dashboard </h1>\
+                <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
             <div className='headerForms'>
                 <form onSubmit={handleSubmitApi}>

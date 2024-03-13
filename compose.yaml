@@ -2,6 +2,6 @@ services:
   homepage:
     build:
       context: .
-      dockerfile: ./ui/Dockerfile
+      dockerfile: ./Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"

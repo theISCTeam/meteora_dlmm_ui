@@ -96,7 +96,7 @@ export const Dashboard = () => {
         <div id='tracker'>
             {/* <h2>{`RPC: ${rpc}`}</h2> */}
             <form onSubmit={handleSubmitAddress}>
-                <label for="addressInput">Position, Solana Wallet or DLMM Pool Address <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ ></label><br/>
+                <label for="addressInput">Position or Solana Wallet <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ ></label><br/>
                 <input type='text' placeholder='Solana Address' id='addressInput' required size={42}></input>
                 <button>Search</button>
             </form>
