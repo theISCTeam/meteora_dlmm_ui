@@ -24,12 +24,23 @@ export async function get_position_transfers_rewards_and_lbInfo (
     let open_time = 0;
     let close_time = Date.now();
 
+    console.log(position_transactions);
+    console.log(position_transactions.length -2);
     for(let key in position_transactions) {
+        console.log({key});
         const events = position_transactions[key];
-        for (let event of events) {
+        const event_names = events.map((e) => {return e.name})
+        for (let i in events) {
+            const event = events[i]
             switch (event.name) {
-    
+                
                 case 'AddLiquidity':
+                    if (Number(key) !== position_transactions.length -2) {
+                        console.log('position was enlarged');
+                        // Init new position from this point forward
+                        console.log(event_names);
+                    }
+                    console.log('position was initialized');
                     initial_x += event.data.amounts[0].toNumber();
                     initial_y += event.data.amounts[1].toNumber();
                     continue;
@@ -40,6 +51,11 @@ export async function get_position_transfers_rewards_and_lbInfo (
                     continue;
                     
                 case 'RemoveLiquidity':
+                    if (event_names.indexOf('PositionClose') === -1) {
+                        console.log('position was diminished');
+                        // Init new position from this point forward
+                        console.log(event_names);
+                    }
                     final_x += event.data.amounts[0].toNumber();
                     final_y += event.data.amounts[1].toNumber();
                     continue;
@@ -51,21 +67,19 @@ export async function get_position_transfers_rewards_and_lbInfo (
                     continue;
     
                 case 'PositionClose':
+                    console.log(event_names);
                     close_time = event.blocktime;                    
             }
         }
     };
 
     // const { tokenXMint, tokenYMint } = await get_account_info(lbPair, program);
-    const { tokenXMint, tokenYMint } = await fetch_with_retry(get_account_info ,lbPair, program);
+    if(!lbPair) {return null};
+    const { tokenXMint, tokenYMint } = await fetch_with_retry(get_account_info, lbPair, program);
     const { decimals: decimals_x } =   await fetch_with_retry(get_token_info, tokenXMint, program);
-    const { decimals: decimals_y } =  await fetch_with_retry(get_token_info, tokenYMint, program);
+    const { decimals: decimals_y } =   await fetch_with_retry(get_token_info, tokenYMint, program);
 
     const [ tokenXPrice, tokenYPrice ] = await fetch_with_retry(get_multiple_token_prices_history, [tokenXMint, tokenYMint], close_time, API_KEY)
-    // await get_multiple_token_prices_history(
-    //         [ tokenXMint, tokenYMint ], 
-    //         close_time
-    // );
         
     return {
         position,

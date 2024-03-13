@@ -13,7 +13,6 @@ const fetch_and_sort_transactions_into_positions = async (signatures, program) =
     if (!signatures.length) {throw new Error('Signatures are not an array')};
     // let transactions = await fetch_parsed_transactions_from_signature_array(signatures, program);
     let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
-    console.log(transactions.length);
     return sort_transaction_array_into_positions_with_events(transactions, program);
 }
 
@@ -128,6 +127,5 @@ export async function find_account_open_positions (user_pubkey, program, API_KEY
 
     const positionsV1 = await Promise.all(promisesV1);
     const positionsV2 = await Promise.all(promisesV2);
-
     return {positionsV1, positionsV2};
 };

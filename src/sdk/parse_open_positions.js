@@ -24,6 +24,7 @@ async function parse_position (
     const parsed_position_data = await get_parsed_events_data(
         position_info.publicKey, program, API_KEY
     );
+    if (parsed_position_data === null) {console.log(position_info.publicKey);return {position:'Error'}};
 
     const decimals_x = parsed_position_data.decimals_x;
     const decimals_y = parsed_position_data.decimals_y;
@@ -39,6 +40,10 @@ async function parse_position (
         lb_pubkey, 
         position_info
     );
+
+    // const binArrays = await get_upper_and_lower_bins(program, lb_pubkey, position_info)
+
+    console.log(binArrays);
 
     const current_token_amounts = get_position_current_amount(
         binStep, 

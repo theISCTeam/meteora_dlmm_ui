@@ -25,8 +25,8 @@ export const OpenPositionsTable = () => {
                             <th>Position Address</th>
                             <th>Duration</th>
                             <th>Status</th>
-                            <th>Initial Deposit</th>
-                            <th>Current Value</th>
+                            <th>Token HODL</th>
+                            <th>Strategy</th>
                             <th>Rewards</th>
                             <th>IL <ToolTip tooltip={'Impermanent Loss (IL) is a result of the price difference of your tokens compared to when you deposited them in the pool.'}/></th>
                             <th>PnL <ToolTip tooltip={'PnL is your Impermanent Loss offset with your rewards'}/></th>
@@ -73,7 +73,13 @@ export const OpenPositionsTable = () => {
                                         <td>{isInRange(item)}</td>
                                         <td>${init.toLocaleString()}</td>
                                         <td>${current.toLocaleString()}</td>
-                                        <td>${fees.toLocaleString()}</td>
+                                        {
+                                            Number(fees) > 0 
+                                            ?
+                                            <td className="greenTd">${fees.toLocaleString()}</td>
+                                            :
+                                            <td className="redTd">${fees.toLocaleString()}</td>
+                                        }
                                         {/* <td>${IL.toLocaleString()}</td> */}
                                         {
                                             Number(IL) > 0 
@@ -118,8 +124,8 @@ const getCurrent = (item) => {
     return (amt_x+amt_y)
 }
 const getFees = (item) => {
-    const amt_x = ((item.rewards_x_claimed + item.rewards_x_unclaimed / 10**item.decimals_x)*item.tokenXPrice.value);
-    const amt_y = ((item.rewards_y_claimed + item.rewards_y_unclaimed / 10**item.decimals_y)*item.tokenYPrice.value);
+    const amt_x = ((item.rewards_x_claimed / 10**item.decimals_x + item.rewards_x_unclaimed / 10**item.decimals_x)*item.tokenXPrice.value);
+    const amt_y = ((item.rewards_y_claimed / 10**item.decimals_x + item.rewards_y_unclaimed / 10**item.decimals_y)*item.tokenYPrice.value);
     return (amt_x+amt_y)
 }
 

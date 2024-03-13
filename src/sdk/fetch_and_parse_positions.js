@@ -22,6 +22,14 @@ export const fetch_and_parse_open_positions = async (address_string, connection,
 
     const {positionsV1, positionsV2} = await find_account_open_positions(pubkey, program, API_KEY);
     const open_positions = positionsV1.concat(positionsV2);
-
-    return open_positions
+    let positions = []
+    for(let position of open_positions) {
+        if (position.position !== 'Error') {
+            positions.push(position);
+        }
+        else {
+            
+        }
+    }
+    return positions
 }

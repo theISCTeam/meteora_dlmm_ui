@@ -57,8 +57,8 @@ export const AccountSummary = () => {
             rewards += (amt_x+amt_y);
         };
         for(let item of openPositions) {
-            const amt_x = ((item.rewards_x_claimed + item.rewards_x_unclaimed / 10**item.decimals_x)*item.tokenXPrice.value);
-            const amt_y = ((item.rewards_y_claimed + item.rewards_y_unclaimed / 10**item.decimals_y)*item.tokenYPrice.value);
+            const amt_x = ((item.rewards_x_claimed / 10**item.decimals_x + item.rewards_x_unclaimed / 10**item.decimals_x)*item.tokenXPrice.value);
+            const amt_y = ((item.rewards_y_claimed / 10**item.decimals_x+ item.rewards_y_unclaimed / 10**item.decimals_y)*item.tokenYPrice.value);
             rewards += (amt_x+amt_y);
         };
         return Number(rewards);

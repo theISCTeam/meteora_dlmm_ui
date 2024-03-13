@@ -7,15 +7,18 @@ export const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, del
 
 export async function fetch_with_retry (callback, ...params) {
     let result;
+    const maxRetries = 20;
+    let retries = 0;
     while(true) {
       try {
         return await callback(...params);
-      } catch {
-        //do your catch stuff here
+      } catch (e) {
+        retries++;
+        console.log('waiting 500ms to fetch again');
+        await sleep(500)
       }
-      console.log('waiting 500ms to fetch again');
-      await sleep(500)
     }
+    return null
 }
 
 

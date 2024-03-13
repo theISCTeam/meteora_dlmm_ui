@@ -18,8 +18,8 @@ export const ClosedPositionsTable = () => {
                     <th>Pool</th>
                     <th>Position Address</th>
                     <th>Duration</th>
-                    <th>Initial Deposit</th>
-                    <th>Final Amount </th>
+                    <th>Token HODL</th>
+                    <th>Strategy</th>
                     <th>Rewards</th>
                     <th>Realized IL <ToolTip tooltip={'Impermanent loss (IL) is a result of the price difference of your tokens compared to when you deposited them in the pool.'}/></th>
                     <th>PnL <ToolTip tooltip={'PnL is your Impermanent Loss offset with your rewards'}/></th>
@@ -65,14 +65,20 @@ export const ClosedPositionsTable = () => {
                                     <td>{days.toFixed(1)} Days</td>
                                     <td>${init.toLocaleString()}</td>
                                     <td>${final.toLocaleString()}</td>
-                                    <td>${fees.toLocaleString()}</td>
                                     {
-                                            Number(IL) > 0 
-                                            ?
-                                            <td className="greenTd">${IL.toLocaleString()}</td>
-                                            :
-                                            <td className="redTd">${IL.toLocaleString()}</td>
-                                        }
+                                        Number(fees) > 0 
+                                        ?
+                                        <td className="greenTd">${fees.toLocaleString()}</td>
+                                        :
+                                        <td className="redTd">${fees.toLocaleString()}</td>
+                                    }
+                                    {
+                                        Number(IL) > 0 
+                                        ?
+                                        <td className="greenTd">${IL.toLocaleString()}</td>
+                                        :
+                                        <td className="redTd">${IL.toLocaleString()}</td>
+                                    }
                                     {
                                         Number(PnL) > 0 
                                         ?
