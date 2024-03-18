@@ -1,7 +1,10 @@
 * {
     margin: 0px;
-
+    font-family: monospace;
+    font-family: "Assistant", sans-serif;
+    font-weight: 500;
 }
+
 .logo {
     border-radius: 15px;
 }
@@ -10,10 +13,12 @@
     position: relative;
     display: inline;
 }
+
 .tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
 }
+
 .tooltip:hover .tooltip-text-low {
     visibility: visible;
     opacity: 1;
@@ -29,11 +34,13 @@
     position: absolute;
     bottom: 300%;
     right: -20%;
-
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 15px;
     /* Fade in tooltip */
     opacity: 0;
     transition: opacity 0.3s;
 }
+
 .tooltip-text-low {
     z-index: 2;
     visibility: hidden;
@@ -44,110 +51,181 @@
     position: absolute;
     bottom: -800%;
     right: -20%;
-
+    border: 1px solid rgb(232, 232, 232);
+    border-radius: 15px;
     /* Fade in tooltip */
     opacity: 0;
     transition: opacity 0.3s;
 }
+
 .positionAddress {
     text-decoration: underline;
     cursor: pointer;
 }
-.positionAddress a{color: white}
+
+.positionAddress a{color: black}
+
 .info-icon {
-    height: 8px;
+    margin-left: 5px;
+    height: 20px;
     background-color: white;
     border-radius: 999px;
     transform: translateY(2px);
 }
+
 .App {
   text-align: center;
-  background-color: #000042;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 100px;
 }
+
 .white-p {
-    color: white;
+    color: black;
 }
+
 #tracker {
-    margin-top: 10vh;
     max-width: 80vw;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 h1 {
-    color: white;
+    margin-left: 10px;
+    font-size: 25px;
 }
+
 header {
+    background: linear-gradient(to top right,#36243B 30%, #000042 90%);
+    color: white;
     width: 100vw;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 30px;
-}
-header img {
-    height: 100px;
+    min-height: 200px;
+    padding-bottom: 20px;
 }
 
+header img {
+    height:75px;
+}
 
 .headerBrand {
+    padding-left: 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
-
+    height: 50px;
 }
 
 .headerForms {
     margin-right: 25px;
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: flex-end;
+    color: white;
 }
 
 .headerForms form {
     padding: 5px;
-    border-radius: 15px;
+    border-radius: 5px;
     margin-right: 5px;
-    border: 1px solid white;
+}
+
+.headerForms form input {
+    color: white;
+    background-color: #00000000;
+    background: none;
+    border: 1px solid rgba(206, 206, 206, 0.413);
+}
+
+.headerForms form label {
+    font-size: 15px;
+    color: white;
+}
+
+#rpcForm {
+    width: max-content;
+}
+
+#apiForm {
+    width: max-content;
+}
+
+#rpcInput {
+    width: 50ch;
+}
+
+#apiInput {
+    width: 36ch;
 }
 
 h2 {
-    color: white;
+    font-size: 40px;
+    color: black;
+}
+
+#addressInput {
+    border-radius: 0px 0px 0px 25px;
+    height: 56px;
+    width: 500px;
+    padding: 6px;
+    font-size: 20px;
+}
+
+#addressForm label {
+    font-size: 20px;
+}
+
+#addressForm button {
+    height: 68px;
+    width: 120px;
+    font-size: 20px;
+    padding: 6px;
+    border-radius: 0px 25px 0px 0px;
 }
 
 form {
     margin-top: 20px;
 }
+
 form input {
-    background-color: #00004200;
-    border: 1px solid white;
-    border-radius: 999px 0px 0px 999px;
-    padding: 5px;
+    background: linear-gradient(to top right,#4a3450 50%, #000042 );
+    border-radius: 0px 0px 0px 15px;
+    padding: 6px;
+    border: none;
+    border-right: 1px solid gray;
     color: white;
     font-weight: bold;
 }
+
 form button {
     cursor: pointer;
-    padding: 5px;
-    border: 1px solid rgba(255, 255, 255, 0);
-    color: black;
+    padding:6px;
+    border:none;
+    color: white;
     font-weight: bold;
-    background-color: #ffffff;
-    border-radius: 0px 999px 999px 0px;
+    font-weight: 400;
+    background-color: black;
+    border-radius: 0px 15px 0px 0px;
     transition: 0.3 ease;
 }
 
 form button &:hover {
-    color: beige;
+    color: black;
     background-color: #000042;
 }
 
 form label {
-    font-size: 12px;
-    color: wheat;
+    font-size: 15px;
+    color: black;
 }
  
 #positionTables {
@@ -165,94 +243,64 @@ form label {
 }
 
 .redTd {
-    color: red;
+    color: rgb(236, 63, 63);
 }
+
 .greenTd {
-    color: rgb(0, 255, 0);
+    color: rgb(0, 166, 0);
 }
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     font-weight: bold;
-  }
-  
-  th {
-    background-color: #02027a;
-  }
-  td, th {
-    border-right: 1px solid rgb(255, 255, 255);
+    border-radius: 15px;
+    width: 80vw;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+th {
+    background-color: #f1efef93;
+    height: 60px;
+}
+
+td, th {
+    border: 1px solid rgb(206, 206, 206);
     padding: 8px;
     text-align: left;
-  }
-  td {
-    text-align: end;
-  }
-  tr:nth-child(even) {
-      background-color: #a4a3a3;
-      color: white;
-  }
-  tr:nth-child(odd) {
-    background-color: #7c7c7c;
-    color: white;
+}
+
+td {
+    height: 60px;
+    text-align: center;
+}
+
+tr {
+    color: black;
 }
 
 .poolName a {
-    color: white;
+    color: black;
 }
+
 .poolName{
     text-align: start;
 }
+
 .positionAddress{
     text-align: start;
 }
-.closedPositionTable {
-    width: 80vw;
-    font-size: 8px;
-    margin-bottom: 10px;
-}
+
 .closedPositionTable td {
     width: 7vw;
 }
 
 .invisTd {
-    background-color: #000042;
+    background-color: white;
     border: #00000000;
 }
+
 .adjustmentHeaders th {
-    background-color: #04a46493;
+    background-color: #f1efef93;
 }
-
-/* .App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */

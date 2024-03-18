@@ -45,7 +45,7 @@ export const Header = () => {
                 <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
             <div className='headerForms'>
-                <form onSubmit={handleSubmitApi}>
+                <form onSubmit={handleSubmitApi} id='apiForm'>
                     <label for="apiInput">
                         Birdeye.so API key (Free Tier Is Enough)
                     </label>
@@ -55,7 +55,6 @@ export const Header = () => {
                         placeholder='Birdeye API key' 
                         id='apiInput' 
                         required 
-                        size={12}
                     />
                     <button>
                         Save
@@ -74,7 +73,7 @@ export const Header = () => {
                             : "Custom API Key Stored"}
                     </label>
                 </form>
-                <form onSubmit={handleSubmitRpc}>
+                <form onSubmit={handleSubmitRpc} id='rpcForm'>
                     <label for="rpcInput">
                         Solana RPC that allows Transaction fetches 
                     </label>
@@ -84,7 +83,6 @@ export const Header = () => {
                         placeholder='RPC'
                         id='rpcInput' 
                         required 
-                        size={12}
                     />
                     <button>
                         {'connect'}

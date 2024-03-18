@@ -95,7 +95,6 @@ export async function get_position_transfers_fees_and_lbInfo (
         program
     );
 
-    console.log({open_time, close_time});
     let prices = [];
     let days = (close_time - open_time)/86400
     if(days < 1) {
@@ -121,11 +120,6 @@ export async function get_position_transfers_fees_and_lbInfo (
     const yopen = yprices[0].value;
     const xclose = xprices[xprices.length -1].value;
     const yclose = yprices[yprices.length -1].value;
-
-    console.log({xprices, yprices});
-
-
-    console.log({xopen, xclose, yopen, yclose});
 
     for(let i in position_adjustments) {
         const time = position_adjustments[i].time;

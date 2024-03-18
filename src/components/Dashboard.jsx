@@ -33,8 +33,9 @@ export const Dashboard = () => {
     const fetch = async (address) => {
         if (loadingOpen) {return};
         setLoadingOpen(true);
+        document.getElementById('submitAddressBtn').innerHTML = 'Searching';
         var dots = window.setInterval( function() {
-            var wait = document.getElementById("wait");
+            var wait = document.getElementById('submitAddressBtn');
             if ( wait.innerHTML.length > 12 ) 
                 wait.innerHTML = "Searching";
             else 
@@ -52,6 +53,7 @@ export const Dashboard = () => {
             clearInterval(dots)
         }
         setLoadingOpen(false);
+        document.getElementById('submitAddressBtn').innerHTML = 'Search'
         clearInterval(dots)
     }
 
@@ -85,23 +87,15 @@ export const Dashboard = () => {
     return (
         <div id='tracker'>
             {/* <p className='white-p'>{`RPC: ${rpc}`}</p> */}
-            <form onSubmit={handleSubmitAddress}>
+            <form onSubmit={handleSubmitAddress} id='addressForm'>
                 <label for="addressInput">Position or Solana Wallet 
                     <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >
                 </label>
                 <br/>
                 <input type='text' placeholder='Solana Address' id='addressInput' required size={42}/>
-                <button type='submit'>Search</button>
+                <button type='submit' id='submitAddressBtn'>Search</button>
             </form>
 
-            {
-                loadingOpen === true
-                ? <div>
-                    <br/>
-                    <h2 id='wait'>Searching</h2>
-                </div>
-                : <></>
-            }
             <div id='positionTables'>
                 <AccountSummary/>
                 <OpenPositionsTable/>
