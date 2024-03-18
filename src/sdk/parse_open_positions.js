@@ -1,5 +1,5 @@
 
-const { get_position_transfers_and_rewards, get_position_transfers_rewards_and_lbInfo } = require("./parse_closed_positions");
+const { get_position_transfers_and_fees, get_position_transfers_fees_and_lbInfo } = require("./parse_closed_positions");
 const { find_positions_with_events } = require("./find_positions");
 const { SCALE_OFFSET} = require("./constants/constants");
 const { get_account_info, fetch_with_retry } = require('./utils/utils');
@@ -13,7 +13,7 @@ const {
     get_bin_from_bin_array
 } = require('./utils/bin_math');
 
-async function parse_position (
+export default async function parse_position (
     position_info, 
     program, 
     version,
@@ -28,8 +28,8 @@ async function parse_position (
 
     const decimals_x = parsed_position_data.decimals_x;
     const decimals_y = parsed_position_data.decimals_y;
-    const tokenXPrice = parsed_position_data.x_price
-    const tokenYPrice = parsed_position_data.y_price
+    const x_price = parsed_position_data.x_price
+    const y_price = parsed_position_data.y_price
 
     // const { binStep } = await get_account_info(lb_pubkey, program);
     const { binStep } = await fetch_with_retry(get_account_info, lb_pubkey, program);
@@ -53,7 +53,7 @@ async function parse_position (
         decimals_y
     );    
 
-    const unclaimed_rewards = get_position_swap_rewards(
+    const unclaimed_fees = get_position_swap_fees(
         version,
         position_info,
         binArrays
@@ -66,20 +66,22 @@ async function parse_position (
         initial_y:parsed_position_data.initial_y,
         current_x:current_token_amounts.token_x_amount,
         current_y:current_token_amounts.token_y_amount,
-        rewards_x_claimed: parsed_position_data.rewards_x,
-        rewards_y_claimed: parsed_position_data.rewards_y,
-        rewards_x_unclaimed: unclaimed_rewards.feeX.toNumber(),
-        rewards_y_unclaimed: unclaimed_rewards.feeY.toNumber(),
+        fees_x_claimed: parsed_position_data.fees_x,
+        fees_y_claimed: parsed_position_data.fees_y,
+        fees_x_unclaimed: unclaimed_fees.feeX.toNumber(),
+        fees_y_unclaimed: unclaimed_fees.feeY.toNumber(),
         open_time: parsed_position_data.open_time,
-        close_time: Math.ceil((parsed_position_data.close_time/1000)),
-        tokenXPrice, tokenYPrice, 
-        decimals_x, decimals_y
+        days:parsed_position_data.days,
+        close_time: Math.ceil((parsed_position_data.close_time)),
+        x_price, y_price, 
+        decimals_x, decimals_y,
+        position_adjustments:parsed_position_data.position_adjustments
     };
 };
 
 async function get_parsed_events_data (position_pubkey, program, API_KEY) {
     const {open_positions:pos} = await find_positions_with_events(position_pubkey, program);
-    return await get_position_transfers_rewards_and_lbInfo(pos[Object.keys(pos)[0]], program, API_KEY);
+    return await get_position_transfers_fees_and_lbInfo(pos[Object.keys(pos)[0]], program, API_KEY);
 }
 
 async function get_upper_and_lower_bins(program, lb_pubkey, position_info) {
@@ -154,7 +156,7 @@ function get_position_current_amount (
     return {token_x_amount, token_y_amount};
 };
 
-function get_position_swap_rewards (
+function get_position_swap_fees (
     version,
     position_info,
     binArrays
@@ -274,5 +276,3 @@ function get_bins_between_upper_and_lower_bound (
     };
     return bins;
 };
-
-module.exports = parse_position;

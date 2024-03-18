@@ -38,9 +38,9 @@ const sort_transaction_array_into_positions_with_events = (transactions, program
     for(let tx of transactions) {
         const events = get_events_for_transaction(tx, program);
         if (events.length !== 0 && events[0].name !== 'Swap') {
-            let position = ''
+            let position = '';
             if (events[0].name === 'CompositionFee') {
-                position = events[1].data.position
+                position = events[1].data.position;
             }
             else {position = events[0].data.position};
 
@@ -51,7 +51,7 @@ const sort_transaction_array_into_positions_with_events = (transactions, program
         }
     }
 
-    const sorted_positions = sort_positions(all_positions)
+    const sorted_positions = sort_positions(all_positions);
     return sorted_positions;
 };
 
@@ -69,14 +69,14 @@ const get_events_for_transaction = (tx, program) => {
                 const eventData = utils.bytes.base64.encode(ixData.subarray(8));
                 let event = program.coder.events.decode(eventData);
                 if (!event) return 0;
-                event.blocktime = tx.blockTime
+                event.blocktime = tx.blockTime;
                 
                 events.push(event);
                 return 0;
-            })
-        })
-    }
-    return events
+            });
+        });
+    };
+    return events;
 };
 
 const sort_positions = (positions) => {

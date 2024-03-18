@@ -1,24 +1,36 @@
-import { useContext, useEffect, useState } from 'react';
-import { Connection, PublicKey } from '@solana/web3.js';
-import { fetch_and_parse_open_positions, fetch_and_parse_closed_positions } from '../sdk/fetch_and_parse_positions';
-import { ConnectionContext, PoolsContext, PositionsContext } from '../contexts/Contexts';
-import { OpenPositionsTable } from './OpenPositionsTable';
 import { ClosedPositionsTable } from './ClosedPositionsTable';
+import { OpenPositionsTable } from './OpenPositionsTable';
 import { AccountSummary } from './AccountSummary';
+import { PublicKey } from '@solana/web3.js';
 import { ToolTip } from './ToolTip';
+import { 
+    fetch_and_parse_open_positions, 
+    fetch_and_parse_closed_positions 
+} from '../sdk/fetch_and_parse_positions';
+import { 
+    useContext, 
+    useState 
+} from 'react';
+import { 
+    ConnectionContext, 
+    PositionsContext 
+} from '../contexts/Contexts';
 
 export const Dashboard = () => {
-    const {rpc, setRpc, apiKey, setApiKey, connection} = useContext(ConnectionContext)
-    const {openPositions, closedPositions, setClosedPositions, setOpenPositions} = useContext(PositionsContext);
-    const {pools} = useContext(PoolsContext);
+    const {
+        apiKey, 
+        connection
+    } = useContext(ConnectionContext);
+
+    const {
+        setClosedPositions, 
+        setOpenPositions
+    } = useContext(PositionsContext);
     
     const [ loadingOpen, setLoadingOpen ] = useState(false);
-    const [ loadingClosed, setLoadingClosed ] = useState(false);
-    const [ connectTxt, setConnectTxt ] = useState('Connect')
-    const [ fetchInterval, setFetchInterval] = useState(undefined)
-    const [ dots, setDots ] = useState('.')
+    const [ fetchInterval, setFetchInterval] = useState(undefined);
 
-    const fetchOpen = async (address) => {
+    const fetch = async (address) => {
         if (loadingOpen) {return};
         setLoadingOpen(true);
         var dots = window.setInterval( function() {
@@ -41,29 +53,18 @@ export const Dashboard = () => {
         }
         setLoadingOpen(false);
         clearInterval(dots)
-    
-    }
-
-    const fetchClosed = async (address) => {
-        setLoadingClosed(true);
-        try {
-            // const closed_positions = await fetch_and_parse_closed_positions(address, connection);
-            // setClosedPositions(closed_positions);
-        }
-        catch(e) {
-            console.log(e);
-            alert('Fetch failed')
-        }
-        setLoadingClosed(false);
     }
 
     const handleSubmitAddress = async (e) => {;
-        if (fetchInterval != undefined) {
+        e.preventDefault();
+
+        if (fetchInterval !== undefined) {
             console.log('clearing interval');
             clearInterval(fetchInterval);
         }
-        const address = e.target.addressInput.value
-        e.preventDefault();
+
+        const address = e.target.addressInput.value;
+
         try {
             new PublicKey(address);
         }
@@ -71,45 +72,35 @@ export const Dashboard = () => {
             console.log(e);
             alert('invalid address')
             return;
-        }
-        fetchClosed(address);
-        fetchOpen(address);
+        };
+        fetch(address);
 
         const inter = setInterval(() => {
             console.log('running interval');
-            fetchClosed(address);
-            fetchOpen(address);
-        }, 12000000)
-        setFetchInterval(inter)
+            fetch(address);
+        }, 12000000);
+        setFetchInterval(inter);
     };
-    useEffect(() => {
-        if (rpc === document.getElementById('rpcInput').value) {
-            setConnectTxt("Connected")
-        }
-        else {
-            setConnectTxt("Connect")
-        }
-        // console.log(rpc === document.getElementById('rpcInput').value);
-    }, [rpc]) 
 
     return (
         <div id='tracker'>
-            {/* <h2>{`RPC: ${rpc}`}</h2> */}
+            {/* <p className='white-p'>{`RPC: ${rpc}`}</p> */}
             <form onSubmit={handleSubmitAddress}>
-                <label for="addressInput">Position or Solana Wallet <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ ></label><br/>
-                <input type='text' placeholder='Solana Address' id='addressInput' required size={42}></input>
-                <button>Search</button>
+                <label for="addressInput">Position or Solana Wallet 
+                    <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >
+                </label>
+                <br/>
+                <input type='text' placeholder='Solana Address' id='addressInput' required size={42}/>
+                <button type='submit'>Search</button>
             </form>
 
             {
-                loadingClosed === true || loadingOpen === true
-                ?
-                <div>
+                loadingOpen === true
+                ? <div>
                     <br/>
                     <h2 id='wait'>Searching</h2>
                 </div>
-                : 
-                <></>
+                : <></>
             }
             <div id='positionTables'>
                 <AccountSummary/>

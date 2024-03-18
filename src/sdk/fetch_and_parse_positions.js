@@ -31,5 +31,5 @@ export const fetch_and_parse_open_positions = async (address_string, connection,
             
         }
     }
-    return positions
+    return positions;
 }

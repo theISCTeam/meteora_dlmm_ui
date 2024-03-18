@@ -1,5 +1,8 @@
 const { BN } = require("@coral-xyz/anchor");
-const { MAX_BASIS_POINT, MAX_BIN_ARRAY_SIZE } = require("../constants/constants");
+const { 
+    MAX_BASIS_POINT, 
+    MAX_BIN_ARRAY_SIZE 
+} = require("../constants/constants");
 
 function mul_div_num (x, y, denominator) {
     return (x * y)/denominator;

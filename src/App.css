@@ -55,7 +55,7 @@
 }
 .positionAddress a{color: white}
 .info-icon {
-    height: 14px;
+    height: 8px;
     background-color: white;
     border-radius: 999px;
     transform: translateY(2px);
@@ -68,6 +68,9 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 100px;
+}
+.white-p {
+    color: white;
 }
 #tracker {
     margin-top: 10vh;
@@ -202,6 +205,23 @@ table {
 .positionAddress{
     text-align: start;
 }
+.closedPositionTable {
+    width: 80vw;
+    font-size: 8px;
+    margin-bottom: 10px;
+}
+.closedPositionTable td {
+    width: 7vw;
+}
+
+.invisTd {
+    background-color: #000042;
+    border: #00000000;
+}
+.adjustmentHeaders th {
+    background-color: #04a46493;
+}
+
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;

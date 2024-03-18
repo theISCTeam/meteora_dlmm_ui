@@ -1,4 +1,8 @@
-const { AnchorProvider,  Program, EventParser } = require("@coral-xyz/anchor");
+const { 
+    AnchorProvider,  
+    Program, 
+    EventParser 
+} = require("@coral-xyz/anchor");
 const { LBCLMM_PROGRAM_IDS } = require("../constants/addresses");
 const idl = require('../constants/meteora_dlmm_idl.json');
 
@@ -14,7 +18,8 @@ function get_program_instance (connection) {
 };
 
 function get_event_parser (connection) {
-    return new EventParser(LBCLMM_PROGRAM_IDS[cluster], get_program_instance(connection).coder);
+    const coder =  get_program_instance(connection).coder
+    return new EventParser(LBCLMM_PROGRAM_IDS[cluster], coder);
 };
 
-module.exports = {get_program_instance, get_event_parser}
+module.exports = {get_program_instance, get_event_parser};

@@ -14,6 +14,7 @@ export async function fetch_with_retry (callback, ...params) {
         return await callback(...params);
       } catch (e) {
         retries++;
+        console.log(e);
         console.log('waiting 500ms to fetch again');
         await sleep(500)
       }
@@ -67,7 +68,7 @@ export async function get_multiple_token_prices_history (mints, blocktime, API_K
     const headers = {'X-API-KEY':API_KEY};
     let responses = [];
     for(let mint of mints) {
-        const url = `${base_url}?address=${mint}&address_type=token&time_from=${(blocktime - 86400)}&time_to=${(blocktime + 86400)}`;
+        const url = `${base_url}?address=${mint}&address_type=token&time_from=${(blocktime - 86400000)}&time_to=${(blocktime + 86400000)}`;
         const res = await fetch(
             url, 
             {headers:headers}
@@ -82,6 +83,7 @@ export async function get_multiple_token_prices_history (mints, blocktime, API_K
 /* ---------------------------------get_multiple_token_prices_in_range---------------------------------------- */
 
 export async function get_multiple_token_prices_history_in_range (mints, start, end, API_KEY) { 
+    console.log({mints, start, end, API_KEY});
     const base_url = 'https://public-api.birdeye.so/public/history_price';
     const headers = {'X-API-KEY':API_KEY};
     let responses = [];
