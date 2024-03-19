@@ -1,13 +1,19 @@
-import { parse_closed_positions } from "./parse_closed_positions";
+import { parse_closed_positions } from "./parse_position_events";
 import { get_program_instance } from "./utils/get_program";
-import { PublicKey } from "@solana/web3.js"
+import { Connection, PublicKey } from "@solana/web3.js"
 import { 
     find_account_open_positions, 
     find_positions_with_events 
 } from "./find_positions";
 
-export const fetch_and_parse_closed_positions = async (address_string, connection, API_KEY) => {
-    const pubkey = new PublicKey(address_string);
+  /**
+   * @param  {String}  Address  Address to search positions for
+   * @param  {Connection} connection @solana/web3.js RPC connection
+   * @param  {String}  API_KEY Birdeye Api Key
+   * @return {Object[]} Returns a parsed array of closed positions
+   */
+export const fetch_and_parse_closed_positions = async (address, connection, API_KEY) => {
+    const pubkey = new PublicKey(address);
     const program = get_program_instance(connection);
     
     const { closed_positions } = await find_positions_with_events(pubkey, program)
@@ -15,7 +21,12 @@ export const fetch_and_parse_closed_positions = async (address_string, connectio
     
     return parsed_closed_positions
 }
-
+  /**
+   * @param  {String}  Address  Address to search positions for
+   * @param  {Connection} connection @solana/web3.js RPC connection
+   * @param  {String}  API_KEY Birdeye Api Key
+   * @return {Object[]} Returns a parsed array of open positions
+   */
 export const fetch_and_parse_open_positions = async (address_string, connection, API_KEY) => {
     const pubkey = new PublicKey(address_string);
     const program = get_program_instance(connection);

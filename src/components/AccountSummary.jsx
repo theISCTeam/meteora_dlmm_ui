@@ -19,18 +19,21 @@ import {
 } from "../sdk/utils/account_math";
 
 const tooltips =  {
-    APR: 'Your combined returns over the course of days provided Liquidity '
+    APR: 'Your combined returns over the amount of days you have provided Liquidity '
     + 'projected over a year of compounding, this is a measure of your portfolio performance',
-    IL: 'The combined Impermanent Loss of all your positions, realized and unrealized',
-    AllTimePnl: 'Your combined PnL (Profit and Loss) for all Positions',
+    tokenPnL: 'The combined Token Appreciation and Depreciation for the duration of all your positions.',
+    AllTimePnl: 'Your combined PnL (Profit and Loss) for all Positions including Fees.',
     StdDev: 'Standard Deviation is a measure of volatility between your positions, '
     + 'a higher number means your position returns are less predictable',
+    fees: 'The combined trading fees accumulated by your positions',
     sharpe: 'A measure of how well your portfolio performed compared against '
     + 'holding your initial tokens amounts without market making. '
     + '* A number over 3 is considered excellent. * A number over 1 is considered acceptable. '
     + '* A number less than 1 is generally evidence of a poor investment.',
 };
-
+  /**
+    * A table that summarizes your positions once either open or closed positions are available
+   */
 export const AccountSummary = () => {
     const {
         openPositions, 
@@ -54,10 +57,10 @@ export const AccountSummary = () => {
         const fees = getAccountRewards(positions);
         const value = getAccountValue(positions);
         const days = getAccountDays(positions);
-        const IL = value - deposits;
+        const TokenPnl = value - deposits;
         const PnL = value - deposits + fees
-        const avgPnL = PnL/noOfPositions
-        const avgIL = IL /noOfPositions
+        const avgPnL = PnL/noOfPositions;
+        const avgTokenPnl = TokenPnl /noOfPositions;
         let APR = getAPR(PnL, days, deposits);
         const nuSharpeRatio = getSharpeRatio(
             (HODL/deposits)*100, 
@@ -72,24 +75,26 @@ export const AccountSummary = () => {
                     <td>{days ? days : '-' } Days</td>
                     <td>${deposits.toLocaleString()}</td>
                     <td>${value.toLocaleString()}</td>
-                    <GreenRedTd value={fees}/>
-                    <GreenRedTd value={APR} prefix="" postfix="%"/>
+                    {/* <GreenRedTd value={standardDeviation} prefix="" important/> */}
+                    {/* <GreenRedTd value={nuSharpeRatio} prefix="" important/> */}
+                    <td className="greenTd">Coming Soon</td>
+                    <td className="greenTd">Coming Soon</td>
                 </tr>
                 <tr>
-                    <th>All Time IL <ToolTip tooltip={tooltips.IL}/></th>
-                    <th>Avg IL / position</th>
-                    <th>All Time PnL <ToolTip tooltip={tooltips.AllTimePnl}/></th>
-                    <th>Avg PnL / position</th>
-                    <th>Standard Deviation <ToolTip tooltip={tooltips.StdDev}/></th>
-                    <th>Sharpe Ratio <ToolTip tooltip={tooltips.sharpe}/></th>
+                    <th>Token PnL <ToolTip tooltip={tooltips.tokenPnL}/></th>
+                    <th>Avg PnL /position</th>
+                    <th>Total Fees<ToolTip tooltip={tooltips.fees}/></th>
+                    <th>PnL + Fees <ToolTip tooltip={tooltips.AllTimePnl}/></th>
+                    <th>Avg PnL + Fees / position</th>
+                    <th>Portfolio APR <ToolTip tooltip={tooltips.APR}/></th>
                 </tr>
                 <tr>
-                    <GreenRedTd value={IL} withPerc={true} base={deposits}/>
-                    <GreenRedTd value={avgIL}/>
-                    <GreenRedTd value={PnL} withPerc={true} base={deposits}/>
-                    <GreenRedTd value={avgPnL}/>
-                    <GreenRedTd value={standardDeviation} prefix=""/>
-                    <GreenRedTd value={nuSharpeRatio} prefix=""/>
+                    <GreenRedTd value={TokenPnl} withPerc base={deposits} important />
+                    <GreenRedTd value={avgTokenPnl} important/>
+                    <GreenRedTd value={fees} important/>
+                    <GreenRedTd value={PnL} withPerc base={deposits} important/>
+                    <GreenRedTd value={avgPnL} important/>
+                    <GreenRedTd value={APR} prefix="" postfix="%" important/>
                 </tr> 
             </>
         )
@@ -104,9 +109,9 @@ export const AccountSummary = () => {
                         <th>Total Positions</th>
                         <th>Total Days</th> 
                         <th>Total Deposits</th>
-                        <th>Total Value</th>
-                        <th>Total Fees</th>
-                        <th>Portfolio APR <ToolTip tooltip={tooltips.APR}/></th>
+                        <th>Total Withdrawals</th>
+                        <th>Standard Deviation <ToolTip tooltip={tooltips.StdDev}/></th>
+                        <th>Sharpe Ratio <ToolTip tooltip={tooltips.sharpe}/></th>
                     </tr>
                     
                     {

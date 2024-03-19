@@ -1,21 +1,38 @@
 import { fetch_with_retry, get_signatures_for_address, sleep } from "./utils/utils";
 import parse_position  from "./parse_open_positions";
-import { utils } from "@coral-xyz/anchor";
+import { Program, utils } from "@coral-xyz/anchor";
 import bs58 from "bs58";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
-
+/**
+ * Returns object array of position addresses with events
+ * @param  {String} pubkey Address to search positions for
+ * @param  {Program} program Anchor Program Instance
+ * @return {Object[]} Returns a parsed Object array of  positions
+ */
 export async function find_positions_with_events (pubkey, program) {
     const signatures = await fetch_with_retry(get_signatures_for_address, pubkey, program) 
     return fetch_and_sort_transactions_into_positions(signatures, program);
 }
 
+
+/**
+ * Returns object array of position addresses with events
+ * @param  {String} pubkey Address to search positions for
+ * @param  {Program} program Anchor Program Instance
+ * @return {Object[]} Returns a parsed Object array of  positions
+ */
 const fetch_and_sort_transactions_into_positions = async (signatures, program) => {
     if (!signatures.length) {throw new Error('Signatures are not an array')};
-    // let transactions = await fetch_parsed_transactions_from_signature_array(signatures, program);
     let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
     return sort_transaction_array_into_positions_with_events(transactions, program);
 }
-
+/**
+ * Fetches transactions from signature array and returns object array of transactions
+ * @param  {String[]} signatures List of signatures
+ * @param  {Program} program Anchor Program Instance
+ * @return {Object[]} Returns an Object array of Transactions
+ */
 const fetch_parsed_transactions_from_signature_array = async (signatures, program) => {
     let parsed_transactions = [];
     for(let i = 0; i < signatures.length; i+=250) {
@@ -32,7 +49,12 @@ const fetch_parsed_transactions_from_signature_array = async (signatures, progra
     }
     return parsed_transactions;
 };
-
+/**
+ * Parses events for transactions and sorts them into 
+ * @param  {Transaction[]} transactions List of transactions
+ * @param  {Program} program Anchor Program Instance
+ * @return {Object[]} Returns an Object array of Transactions
+*/
 const sort_transaction_array_into_positions_with_events = (transactions, program) => {
     let all_positions = {}; 
     for(let tx of transactions) {
@@ -54,14 +76,19 @@ const sort_transaction_array_into_positions_with_events = (transactions, program
     const sorted_positions = sort_positions(all_positions);
     return sorted_positions;
 };
-
+/**
+ * Parses events for transactions and sorts them into 
+ * @param  {Transaction} transaction Solana getTransaction response
+ * @param  {Program} program Anchor Program Instance
+ * @return {Object[]} Returns an Object array of OPosition Events
+*/
 const get_events_for_transaction = (tx, program) => {
     let events = [];
 
     if (tx && tx.meta) {
         let {meta} = tx;
-        meta.innerInstructions?.map((ix) => {
-            ix.instructions.map((iix) => {
+        meta.innerInstructions?.forEach((ix) => {
+            ix.instructions.forEach((iix) => {
                 if (!iix.programId.equals(program.programId)) return 0;
                 if (!("data" in iix)) return 0; // Guard in case it is a parsed decoded instruction
                 
@@ -78,7 +105,11 @@ const get_events_for_transaction = (tx, program) => {
     };
     return events;
 };
-
+/**
+ * Sorts positions into open and closed
+ * @param  {Object[]} transactions List of transactions with events
+ * @return {Object} Returns an Object containing 2 Object arrays of Positions
+*/
 const sort_positions = (positions) => {
     let open_positions = {};
     let closed_positions = {};
@@ -94,9 +125,14 @@ const sort_positions = (positions) => {
     return {open_positions, closed_positions};
 };
 
-
+/**
+ * Finds open positions from Program Account
+ * @param  {PublicKey]} user_pubkey Target address
+ * @param  {Program} transactions Anchor Program Instance
+ * @param  {string} transactions Birdeye API key
+ * @return {Object} Returns an Object containing 2 Object arrays of Open Positions
+*/
 export async function find_account_open_positions (user_pubkey, program, API_KEY) {
-
     const position_accounts = await program.account.position.all([
         {
             memcmp: {

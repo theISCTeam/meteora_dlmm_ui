@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "private": true,
-
+  "homepage": "https://theiscteam.github.io/meteora_dlmm_ui/",
   "dependencies": {
     "@coral-xyz/anchor": "^0.29.0",
     "@solana/web3.js": "^1.90.1",

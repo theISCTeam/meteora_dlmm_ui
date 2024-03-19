@@ -5,6 +5,16 @@
     font-weight: 500;
 }
 
+h1 {
+    margin-left: 10px;
+    font-size: 25px;
+}
+
+h2 {
+    font-size: 40px;
+    color: black;
+}
+
 .logo {
     border-radius: 15px;
 }
@@ -58,13 +68,6 @@
     transition: opacity 0.3s;
 }
 
-.positionAddress {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.positionAddress a{color: black}
-
 .info-icon {
     margin-left: 5px;
     height: 20px;
@@ -92,11 +95,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-h1 {
-    margin-left: 10px;
-    font-size: 25px;
 }
 
 header {
@@ -167,17 +165,9 @@ header img {
     width: 36ch;
 }
 
-h2 {
-    font-size: 40px;
-    color: black;
-}
-
-#addressInput {
-    border-radius: 0px 0px 0px 25px;
-    height: 56px;
-    width: 500px;
-    padding: 6px;
-    font-size: 20px;
+#addressFormWrapper {
+    background: linear-gradient(to top right,#4a3450 50%, #000042 );
+    border-radius: 0px 25px 0px 25px;
 }
 
 #addressForm label {
@@ -190,6 +180,14 @@ h2 {
     font-size: 20px;
     padding: 6px;
     border-radius: 0px 25px 0px 0px;
+}
+
+#addressInput {
+    border-radius: 0px 0px 0px 25px;
+    height: 56px;
+    width: 500px;
+    padding: 6px;
+    font-size: 20px;
 }
 
 form {
@@ -227,7 +225,7 @@ form label {
     font-size: 15px;
     color: black;
 }
- 
+
 #positionTables {
     margin-top: 5vh;
     display: flex;
@@ -236,18 +234,12 @@ form label {
     gap:5vh;
 }
 
-.positionTable {
+.positionTable{
+    width: 80vw;
     min-height: 10vh;
     font-size: 12px;
     font-weight: bold;
-}
-
-.redTd {
-    color: rgb(236, 63, 63);
-}
-
-.greenTd {
-    color: rgb(0, 166, 0);
+    margin-bottom: 10px;
 }
 
 table {
@@ -280,27 +272,47 @@ tr {
     color: black;
 }
 
-.poolName a {
-    color: black;
+.redTd {
+    color: rgb(236, 63, 63);
+}
+
+.greenTd {
+    color: rgb(0, 166, 0);
 }
 
 .poolName{
     text-align: start;
 }
 
-.positionAddress{
-    text-align: start;
+.poolName a {
+    color: black;
 }
 
-.closedPositionTable td {
-    width: 7vw;
+.positionAddress {
+    text-decoration: underline;
+    text-align: start;
+    cursor: pointer;
+}
+
+.positionAddress a{
+    color: black
+}
+
+.important {
+    font-weight: 800;
+    font-size: 22px;
 }
 
 .invisTd {
-    background-color: white;
-    border: #00000000;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
 }
 
-.adjustmentHeaders th {
-    background-color: #f1efef93;
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+  transition: background-color 60000s;
+  -webkit-text-fill-color: #fff !important;
 }

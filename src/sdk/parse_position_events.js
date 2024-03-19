@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { Program } from "@coral-xyz/anchor";
 import { 
     fetch_with_retry,
     get_account_info, 
@@ -8,12 +8,18 @@ import {
 } from "./utils/utils";
 
 
-export async function get_position_transfers_fees_and_lbInfo (
+/**
+ * Sorts positions into open and closed
+ * @param  {Object[]} position_transactions List of transactions with events
+ * @param  {Program} program Anchor Program Instance
+ * @param  {String} API_KEY Birdeye API Key
+ * @return {Object} Returns an Object containing compiled position data
+*/
+export async function parse_position_events (
     position_transactions, 
     program,
     API_KEY
     ) {
-
     let position = '' // Address
     let lbPair = ''  // Address
     let final_x = 0; // Withdrawals
@@ -28,7 +34,6 @@ export async function get_position_transfers_fees_and_lbInfo (
 
     for(let key in position_transactions) {
         const events = position_transactions[key];
-        const event_names = events.map((e) => {return e.name})
         for (let i in events) {
             const event = events[i]
             switch (event.name) {
@@ -51,7 +56,7 @@ export async function get_position_transfers_fees_and_lbInfo (
                 case 'RemoveLiquidity':
                     position_adjustments.push({
                         time:event.blocktime,
-                        action: 'remove liquidity',
+                        action: 'withdraw liquidity',
                         x_amount: -event.data.amounts[0].toNumber(),
                         y_amount: -event.data.amounts[1].toNumber(),
                     });
@@ -66,7 +71,12 @@ export async function get_position_transfers_fees_and_lbInfo (
                     continue;
     
                 case 'PositionClose':
-                    close_time = event.blocktime;                    
+                    close_time = event.blocktime;     
+                    continue;            
+                
+                default:
+                    // Unhandled Event
+                    console.log(`Unexpected event: "${event.name}" encountered while parsing position events`)
             }
         }
     };
@@ -115,7 +125,7 @@ export async function get_position_transfers_fees_and_lbInfo (
         );
     }
 
-    const [xprices, yprices ] = prices
+    const [ xprices, yprices ] = prices
     const xopen = xprices[0].value;
     const yopen = yprices[0].value;
     const xclose = xprices[xprices.length -1].value;
@@ -149,7 +159,12 @@ export async function get_position_transfers_fees_and_lbInfo (
     };
 };  
 
-
+/**
+ * Compares price array timestamps with target timestamps to find the closest
+ * @param  {Object[]} prices List of prices with timestamps
+ * @param  {any} time timestamp
+ * @return {Object} Returns an Object containing 2 Object arrays of Positions
+*/
 const findNearestPriceToTime = (prices, time) => {
     for(let i in prices) {
         if(!prices[i+1]) {return prices[i]}
@@ -159,6 +174,14 @@ const findNearestPriceToTime = (prices, time) => {
     };
 };
 
+
+/**
+ * Parses an array of positions
+ * @param  {Object[]} positions List of positions with events
+ * @param  {Program} program Anchor Program Instance
+ * @param  {String} API_KEY Birdeye API Key
+ * @return {Object[]} Returns an Object array with parsed positions
+*/
 export const parse_closed_positions = async (
     positions, 
     program, 
@@ -167,7 +190,7 @@ export const parse_closed_positions = async (
     let parsed_positions = [];
     for(let key in positions) {
         parsed_positions.push(
-            await get_position_transfers_fees_and_lbInfo(
+            await parse_position_events(
                 positions[key], 
                 program, 
                 API_KEY

@@ -87,13 +87,15 @@ export const Dashboard = () => {
     return (
         <div id='tracker'>
             {/* <p className='white-p'>{`RPC: ${rpc}`}</p> */}
-            <form onSubmit={handleSubmitAddress} id='addressForm'>
+            <form onSubmit={handleSubmitAddress} id='addressForm' className='form'>
                 <label for="addressInput">Position or Solana Wallet 
                     <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >
                 </label>
                 <br/>
-                <input type='text' placeholder='Solana Address' id='addressInput' required size={42}/>
-                <button type='submit' id='submitAddressBtn'>Search</button>
+                <div id='addressFormWrapper'>
+                    <input /* type='password' */type='text' placeholder='Solana Address' id='addressInput' required size={42}/>
+                    <button type='submit' id='submitAddressBtn'>Search</button>
+                </div>
             </form>
 
             <div id='positionTables'>

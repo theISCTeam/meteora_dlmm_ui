@@ -6,7 +6,11 @@ import {
     getTokenHodl, 
     getUsdAtOpen 
 } from "./position_math";
-
+/** 
+*  Returns position duration for all positions
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return value as String fixed to 1
+*/
 export function getAccountDays({openPositions, closedPositions}) {
     let days = 0.0;
     for(let pos of closedPositions) {
@@ -23,7 +27,11 @@ export function getAccountDays({openPositions, closedPositions}) {
     };
     return Number(days.toFixed(1));
 };
-
+/** 
+*  Returns deposits for all positions in USD
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return value as number
+*/
 export function getAccountDeposits({openPositions, closedPositions}) {
     let deposits = 0;
     for(let item of closedPositions) {
@@ -34,7 +42,11 @@ export function getAccountDeposits({openPositions, closedPositions}) {
     };
     return Number(deposits);
 };
-
+/** 
+*  Returns a total of current and final position values for all positions in USD
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return value as number
+*/
 export function getAccountValue({openPositions, closedPositions}) {
     let value = 0;
     for(let item of closedPositions) {
@@ -45,7 +57,11 @@ export function getAccountValue({openPositions, closedPositions}) {
     };
     return Number(value);
 };
-
+/** 
+*  Returns a total of fee values for all positions in USD
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return value as number
+*/
 export function getAccountRewards({openPositions, closedPositions}) {
     let fees = 0;
     for(let item of closedPositions) {
@@ -56,7 +72,11 @@ export function getAccountRewards({openPositions, closedPositions}) {
     };
     return Number(fees);
 };
-
+/** 
+*  Returns deposits for all positions in USD (same as getAccountDeposits)
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return value as number
+*/
 export function getAccountUsdHodl({openPositions, closedPositions}) {
     let value = 0;
     for (let item of closedPositions){
@@ -67,7 +87,13 @@ export function getAccountUsdHodl({openPositions, closedPositions}) {
     };
     return value;
 };
-
+/** 
+*  Returns combined sharpe ratio for portfolio
+   * @param {number} Rx Expected risk free portfolio return
+   * @param {number} Rf Expected portfolio return
+   * @param {number} StdDev Standard Deviation of portfolio
+   * @return APR as number
+*/
 export function getSharpeRatio (Rx, Rf, StdDev) {
     return (Rx-Rf)/StdDev;
 };
@@ -96,7 +122,11 @@ function getValuesAndMeanFromPositions(open_positions, closed_positions, n) {
     const mean = totalPercent/n;
     return {values, mean};
 };
-
+/** 
+*  Returns Standard Deviation for positions
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return StdDev as number
+*/
 export function getSTDvFromPositions (open_positions, closed_positions) {
     const n = (
         open_positions.length 
@@ -114,5 +144,4 @@ export function getSTDvFromPositions (open_positions, closed_positions) {
     })
     const STDv =  Math.sqrt(sum/(n-1));
     return STDv;
-
 }

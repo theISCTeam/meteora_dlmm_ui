@@ -70,7 +70,7 @@ export const Header = () => {
                                     + 'load at times which may cause slow loading.'
                                 }/>
                             </> 
-                            : "Custom API Key Stored"}
+                            : "Custom API Key Connected"}
                     </label>
                 </form>
                 <form onSubmit={handleSubmitRpc} id='rpcForm'>
@@ -91,7 +91,7 @@ export const Header = () => {
                     <label>
                         {rpc === DEFAULT_RPC 
                             ? <> 
-                                {"Alchemy Connected"}
+                                {"Default Connected"}
                                 <ToolTipLow tooltip={
                                     'There is a Default RPC, this is a shared resource '
                                     + 'and is subject to significant load at times '

@@ -39,14 +39,20 @@ function App() {
     }, [rpc])
 
     return (
-        <ConnectionContext.Provider value={{rpc, setRpc, apiKey, setApiKey, connection}}>   
+        <ConnectionContext.Provider value={{
+            rpc, 
+            setRpc, 
+            apiKey, 
+            setApiKey, 
+            connection
+        }}>   
             <PoolsContext.Provider value={{pools}}>
                 <PositionsContext.Provider value={{
-                        openPositions, 
-                        closedPositions, 
-                        setClosedPositions, 
-                        setOpenPositions
-                    }}>
+                    openPositions, 
+                    closedPositions, 
+                    setClosedPositions, 
+                    setOpenPositions
+                }}>
                     <div className="App">
                         <Header/>
                         <Dashboard/>

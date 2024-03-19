@@ -1,6 +1,5 @@
 export const ToolTip = (params) => {
     const { tooltip } = params;
-    
     return (
         <div className="tooltip">
             <p className="tooltip-text">{tooltip}</p>
@@ -11,7 +10,6 @@ export const ToolTip = (params) => {
 
 export const ToolTipLow = (params) => {
     const { tooltip } = params;
-    
     return (
         <div className="tooltip">
             <p className="tooltip-text-low">{tooltip}</p>

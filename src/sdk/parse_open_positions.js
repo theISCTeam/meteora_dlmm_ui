@@ -1,5 +1,5 @@
 
-const { get_position_transfers_and_fees, get_position_transfers_fees_and_lbInfo } = require("./parse_closed_positions");
+const { parse_position_events } = require("./parse_position_events");
 const { find_positions_with_events } = require("./find_positions");
 const { SCALE_OFFSET} = require("./constants/constants");
 const { get_account_info, fetch_with_retry } = require('./utils/utils');
@@ -30,8 +30,7 @@ export default async function parse_position (
     const decimals_y = parsed_position_data.decimals_y;
     const x_price = parsed_position_data.x_price
     const y_price = parsed_position_data.y_price
-
-    // const { binStep } = await get_account_info(lb_pubkey, program);
+    
     const { binStep } = await fetch_with_retry(get_account_info, lb_pubkey, program);
     
     const binArrays = await fetch_with_retry(
@@ -40,8 +39,6 @@ export default async function parse_position (
         lb_pubkey, 
         position_info
     );
-
-    // const binArrays = await get_upper_and_lower_bins(program, lb_pubkey, position_info)
 
     console.log(binArrays);
 
@@ -81,7 +78,7 @@ export default async function parse_position (
 
 async function get_parsed_events_data (position_pubkey, program, API_KEY) {
     const {open_positions:pos} = await find_positions_with_events(position_pubkey, program);
-    return await get_position_transfers_fees_and_lbInfo(pos[Object.keys(pos)[0]], program, API_KEY);
+    return await parse_position_events(pos[Object.keys(pos)[0]], program, API_KEY);
 }
 
 async function get_upper_and_lower_bins(program, lb_pubkey, position_info) {

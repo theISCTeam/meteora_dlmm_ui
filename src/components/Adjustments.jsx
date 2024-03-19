@@ -13,7 +13,9 @@ const adjustmentHeaders = (len) => {
     )
 }
 
-
+  /**
+    * A table that summarizes your position adjustments
+   */
 export const Adjustments = ({item, lbInfo}) => {
     if (!item.position_adjustments) {return <></>}
     let adjustments = [];
@@ -32,12 +34,9 @@ export const Adjustments = ({item, lbInfo}) => {
                     <br/>
                     {`${tokenSymbols[1]}: ${e.y_amount/10**item.decimals_y}`}
                 </td>
-                <td className="invisTd"/>
-                <td className="invisTd"/>
-                <td className="invisTd"/>
-                <td className="invisTd"/>
             </tr>
         )
     }) 
+    
     return adjustments
 }
