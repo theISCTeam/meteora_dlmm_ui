@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.45b95eed.css",
-    "main.js": "/static/js/main.8d48d8b4.js",
-    "static/js/453.9b41687b.chunk.js": "/static/js/453.9b41687b.chunk.js",
-    "index.html": "/index.html",
-    "main.45b95eed.css.map": "/static/css/main.45b95eed.css.map",
-    "main.8d48d8b4.js.map": "/static/js/main.8d48d8b4.js.map",
-    "453.9b41687b.chunk.js.map": "/static/js/453.9b41687b.chunk.js.map"
+    "main.css": "/meteora_dlmm_ui/static/css/main.45b95eed.css",
+    "main.js": "/meteora_dlmm_ui/static/js/main.a2579d9e.js",
+    "static/js/453.9b41687b.chunk.js": "/meteora_dlmm_ui/static/js/453.9b41687b.chunk.js",
+    "index.html": "/meteora_dlmm_ui/index.html",
+    "main.45b95eed.css.map": "/meteora_dlmm_ui/static/css/main.45b95eed.css.map",
+    "main.a2579d9e.js.map": "/meteora_dlmm_ui/static/js/main.a2579d9e.js.map",
+    "453.9b41687b.chunk.js.map": "/meteora_dlmm_ui/static/js/453.9b41687b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.45b95eed.css",
-    "static/js/main.8d48d8b4.js"
+    "static/js/main.a2579d9e.js"
   ]
 }
