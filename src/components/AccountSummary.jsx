@@ -21,11 +21,11 @@ import {
 const tooltips =  {
     APR: 'Your combined returns over the amount of days you have provided Liquidity '
     + 'projected over a year of compounding, this is a measure of your portfolio performance',
-    tokenPnL: 'The combined Token Appreciation and Depreciation for the duration of all your positions.',
+    tokenPnL: 'Your Token Value minus USD Deposits',
     AllTimePnl: 'Your combined PnL (Profit and Loss) for all Positions including Fees.',
     StdDev: 'Standard Deviation is a measure of volatility between your positions, '
     + 'a higher number means your position returns are less predictable',
-    fees: 'The combined trading fees accumulated by your positions',
+    fees: 'The total trading fees earned by your positions',
     sharpe: 'A measure of how well your portfolio performed compared against '
     + 'holding your initial tokens amounts without market making. '
     + '* A number over 3 is considered excellent. * A number over 1 is considered acceptable. '
@@ -62,11 +62,14 @@ export const AccountSummary = () => {
         return (
             <>
                 <tr>
+                    <td>#of POOLS <br/> Coming soon</td>
                     <td>{openPositions.length + closedPositions.length} Positions</td>
                     <td>{days ? days : '-' } Days</td>
+                    <td>Time In Range% <br/> Coming soon</td>
                     <td>${deposits.toLocaleString()}</td>
                     <td>${value.toLocaleString()}</td>
-                    <GreenRedTd value={TokenPnl} withPerc base={deposits} important />
+                    <td>TOTAL STRAT VAL <br/> Coming soon</td>
+                    {/* <GreenRedTd value={TokenPnl} withPerc base={deposits} important /> Need to calc this */}
                     <GreenRedTd value={fees} important/>
                     <GreenRedTd value={PnL} withPerc base={deposits} important/>
                 </tr>
@@ -80,13 +83,16 @@ export const AccountSummary = () => {
                 <h2>Account Performance</h2>    
                 <table>
                     <tr>
+                        <th>Used Pools</th>
                         <th>Total Positions</th>
                         <th>Total Days</th> 
+                        <th>Time In Range</th>
                         <th>Total USD Deposits</th>
-                        <th>Total USD Withdrawals</th>
-                        <th>Token PnL <ToolTip tooltip={tooltips.tokenPnL}/></th>
+                        <th>Total Token HODL</th>
+                        <th>Total Token Strategy</th> {/* Need to calc this */}
+                        {/* <th>Token PnL <ToolTip tooltip={tooltips.tokenPnL}/></th> */}
                         <th>Total Fees<ToolTip tooltip={tooltips.fees}/></th>
-                        <th>PnL + Fees <ToolTip tooltip={tooltips.AllTimePnl}/></th>
+                        <th>Total PnL<ToolTip tooltip={tooltips.AllTimePnl}/></th>
                     </tr>
                     {
                         openPositions[0] || closedPositions[0]

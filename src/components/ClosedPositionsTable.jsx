@@ -27,7 +27,7 @@ export const ClosedPositionsTable = () => {
         <div className="positionTable" id='closedPositions'>
             <h2>Closed Positions</h2>
             <table>
-            <PositionHeaders/>
+            <PositionHeaders open/>
             </table>
             {
                 closedPositions.length
@@ -81,6 +81,7 @@ export const ClosedPositionsTable = () => {
                                     <br/>
                                     <span className="smolText">close :{new Date(item.close_time*1000).toLocaleTimeString()}{new Date(item.close_time*1000).toLocaleDateString()}</span>  
                                 </td>
+                                <td>RANGE <br/> Coming soon</td>
                                 <td>
                                     <span> ${usdHodl.toLocaleString()}</span>
                                     <br/>

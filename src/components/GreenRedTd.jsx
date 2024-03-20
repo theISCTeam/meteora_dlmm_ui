@@ -20,19 +20,27 @@ export const GreenRedTd = (
     }) => {
     let greenClasses = 'greenTd'
     let redClasses = 'redTd'
-        
+     
+    if(Number(value) === 0 && Number(base) === 0){
+        console.log('no data');
+        return (
+            <td className={redClasses}>No Data!</td>
+        )
+    }
     if(withPerc && !base) {
+        console.log(value, base);
         return (
             <td className={"redTd"}>#ERROR</td>
         )
     }
 
-    if (important === true) {
+    if (important === true) { 
         greenClasses += ' important'
         redClasses += ' important'
     }
 
     if(!value) {
+        console.log(value);
         return (
             <td className={"redTd"}>#ERROR</td>
         )

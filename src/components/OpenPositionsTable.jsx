@@ -28,6 +28,7 @@ export const OpenPositionsTable = () => {
                         openPositions.length
                         ? openPositions.map(item => {
                             const lbInfo = pools.find((e) => e.address === item.lbPair.toString());
+                            const symbols = lbInfo.name.split('-')
                             const tokenHodl = getTokenHodl(item);
                             const usdHodl = getUsdAtOpen(item);
                             const current  = getCurrent(item);
@@ -35,8 +36,8 @@ export const OpenPositionsTable = () => {
                             const PnL =  current - usdHodl + fees;
                             const days = item.days;
                             // console.log(item); 
-                            return (
-                                <>
+                            return (<>
+                                <table>
                                     <tr>
                                         <td className="poolName">
                                             <a 
@@ -65,15 +66,38 @@ export const OpenPositionsTable = () => {
                                             </a>
                                         </td>
                                         <td>
-                                            <span className="smolText">open :{new Date(item.open_time*1000).toLocaleTimeString()}{new Date(item.open_time*1000).toLocaleDateString()}</span>  
-                                            <br/>
                                             <span> {days.toFixed(1)} Days</span>
+                                            <br/>
+                                            <span className="smolText">open :{new Date(item.open_time*1000).toLocaleTimeString()}{new Date(item.open_time*1000).toLocaleDateString()}</span>  
                                         </td>
                                         <td>{isInRange(item)}</td>
-                                        <td>${usdHodl.toLocaleString()}</td>
-                                        <td>${tokenHodl.toLocaleString()}</td>
-                                        <td>${current.toLocaleString()}</td>
-                                        <GreenRedTd value={fees}/>
+                                        <td>
+                                            <span> ${usdHodl.toLocaleString()}</span>
+                                            <br/>
+                                            <span className="mediumSmolText">{symbols[0]}:{(item.initial_x/10**item.decimals_x).toLocaleString()} </span>  
+                                            |   <span className="mediumSmolText">{symbols[1]}:{(item.initial_y/10**item.decimals_y).toLocaleString()} </span>  
+                                        </td>
+                                        <td>
+                                            <span> ${tokenHodl.toLocaleString()}</span>
+                                            <br/>
+                                            <span className="mediumSmolText">{symbols[0]}:{(item.initial_x/10**item.decimals_x).toLocaleString()} </span>  
+                                            | <span className="mediumSmolText">{symbols[1]}:{(item.initial_y/10**item.decimals_y).toLocaleString()} </span>  
+                                        </td>
+                                        <td>
+                                            <span> ${current.toLocaleString()}</span>
+                                            <br/>
+                                            <span className="mediumSmolText">{symbols[0]}:{(item.current_x/10**item.decimals_x).toLocaleString()} </span>
+                                            | <span className="mediumSmolText">{symbols[1]}:{(item.current_y/10**item.decimals_y).toLocaleString()} </span>  
+                                        </td>
+                                        <td>
+                                            <span className="smolText">claimed {symbols[0]}:{((item.fees_x_claimed)/10**item.decimals_x).toLocaleString()} </span>  
+                                            | <span className="smolText">{symbols[1]}:{((item.fees_y_claimed)/10**item.decimals_y).toLocaleString()} </span>  
+                                            <br/>
+                                            <span> ${fees.toLocaleString()}</span>
+                                            <br/>
+                                            <span className="smolText">unclaimed {symbols[0]}:{((item.fees_x_unclaimed)/10**item.decimals_x).toLocaleString()} </span>  
+                                            | <span className="smolText">{symbols[1]}:{((item.fees_y_unclaimed)/10**item.decimals_y).toLocaleString()} </span>  
+                                        </td>
                                         <GreenRedTd 
                                             value={PnL} 
                                             withPerc={true} 
@@ -81,9 +105,10 @@ export const OpenPositionsTable = () => {
                                             important={true}
                                             />
                                     </tr>
-                                    <table className="adjustments" id={`events${item.position.toString()}`}>
-                                        <Adjustments item={item} lbInfo={lbInfo}/>
-                                    </table> 
+                                </table>
+                                <table className="adjustments" id={`events${item.position.toString()}`}>
+                                    <Adjustments item={item} lbInfo={lbInfo}/>
+                                </table> 
                                 </>
                             );
                         })
