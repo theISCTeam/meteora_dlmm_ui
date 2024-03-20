@@ -19,15 +19,14 @@ export const OpenPositionsTable = () => {
 
     return (
         <>
-            <h2>Open Positions</h2>
             <div className='positionTable'  id='openPositions'>
+                <h2>Open Positions</h2>
                 <table>
+                <PositionHeaders open/>
+                </table>
                     {
-                        !openPositions.length
-                        ?
-                            <PositionHeaders open={true}/>
-                        :
-                        openPositions.map(item => {
+                        openPositions.length
+                        ? openPositions.map(item => {
                             const lbInfo = pools.find((e) => e.address === item.lbPair.toString());
                             const tokenHodl = getTokenHodl(item);
                             const usdHodl = getUsdAtOpen(item);
@@ -35,10 +34,9 @@ export const OpenPositionsTable = () => {
                             const fees = getOpenPosFees(item);
                             const PnL =  current - usdHodl + fees;
                             const days = item.days;
-
+                            // console.log(item); 
                             return (
-                                <table className="innerTable">
-                                    <PositionHeaders open={true}/>
+                                <>
                                     <tr>
                                         <td className="poolName">
                                             <a 
@@ -47,16 +45,30 @@ export const OpenPositionsTable = () => {
                                             >
                                                 {lbInfo.name}
                                             </a>
+                                            <button className="expand" onClick={() => {
+                                                const element = document.getElementById(`events${item.position.toString()}`)
+                                                console.log(element.style.visibility);
+                                                if (element.style.visibility === 'collapse') {
+                                                    element.style.visibility = 'visible'
+                                                }
+                                                else {
+                                                    element.style.visibility = 'collapse'
+                                                }
+                                            }}>{`Expand Events (${item.position_adjustments.length})`}</button>
                                         </td>
                                         <td className='positionAddress'>
                                             <a 
                                                 href={`https://solana.fm/address/${item.position.toString()}`} 
                                                 target="empty"
-                                            >
+                                                >
                                                 {"🌏︎ "+item.position.toString().slice(0,8)}...
                                             </a>
                                         </td>
-                                        <td>{days.toFixed(1)} Days</td>
+                                        <td>
+                                            <span className="smolText">open :{new Date(item.open_time*1000).toLocaleTimeString()}{new Date(item.open_time*1000).toLocaleDateString()}</span>  
+                                            <br/>
+                                            <span> {days.toFixed(1)} Days</span>
+                                        </td>
                                         <td>{isInRange(item)}</td>
                                         <td>${usdHodl.toLocaleString()}</td>
                                         <td>${tokenHodl.toLocaleString()}</td>
@@ -67,19 +79,32 @@ export const OpenPositionsTable = () => {
                                             withPerc={true} 
                                             base={tokenHodl}
                                             important={true}
-                                        />
+                                            />
                                     </tr>
-                                    <Adjustments item={item} lbInfo={lbInfo} />  
-                                </table>
+                                    <table className="adjustments" id={`events${item.position.toString()}`}>
+                                        <Adjustments item={item} lbInfo={lbInfo}/>
+                                    </table> 
+                                </>
                             );
                         })
+                        : placeholder
                     }
-                </table>
             </div>
         </>
     );
 };
 
+const placeholder = <tr>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+</tr>
 
 const isInRange = (pos) => {
     if(pos.current_x.toNumber() > 0 && pos.current_y.toNumber() > 0 ) {

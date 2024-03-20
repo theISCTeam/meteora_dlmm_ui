@@ -26,8 +26,9 @@ export const getTokenHodl = (pos) => {
 * @return value as Number
 */
 export const getCurrent = (pos) => {
-    const amt_x = ((pos.current_x / 10**pos.decimals_x)*pos.x_price.last);
-    const amt_y = ((pos.current_y / 10**pos.decimals_y)*pos.y_price.last);
+    // console.log(pos);
+    const amt_x = (((Number(pos.current_x)+Number(pos.withdrawn_x)) / (10**pos.decimals_x))*pos.x_price.last);
+    const amt_y = (((Number(pos.current_y)+Number(pos.withdrawn_y)) / (10**pos.decimals_y))*pos.y_price.last);
     return (amt_x+amt_y);
 };
 

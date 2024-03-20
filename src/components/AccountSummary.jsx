@@ -47,10 +47,6 @@ export const AccountSummary = () => {
             openPositions.length 
             + closedPositions.length
         );
-        const standardDeviation = getSTDvFromPositions(
-            openPositions, 
-            closedPositions
-        );
         const positions = {openPositions, closedPositions};
         const HODL = getAccountUsdHodl(positions);
         const deposits = getAccountDeposits(positions);
@@ -62,11 +58,6 @@ export const AccountSummary = () => {
         const avgPnL = PnL/noOfPositions;
         const avgTokenPnl = TokenPnl /noOfPositions;
         let APR = getAPR(PnL, days, deposits);
-        const nuSharpeRatio = getSharpeRatio(
-            (HODL/deposits)*100, 
-            (PnL/deposits)*100, 
-            standardDeviation
-        );
  
         return (
             <>
@@ -75,54 +66,45 @@ export const AccountSummary = () => {
                     <td>{days ? days : '-' } Days</td>
                     <td>${deposits.toLocaleString()}</td>
                     <td>${value.toLocaleString()}</td>
-                    {/* <GreenRedTd value={standardDeviation} prefix="" important/> */}
-                    {/* <GreenRedTd value={nuSharpeRatio} prefix="" important/> */}
-                    <td className="greenTd">Coming Soon</td>
-                    <td className="greenTd">Coming Soon</td>
-                </tr>
-                <tr>
-                    <th>Token PnL <ToolTip tooltip={tooltips.tokenPnL}/></th>
-                    <th>Avg PnL /position</th>
-                    <th>Total Fees<ToolTip tooltip={tooltips.fees}/></th>
-                    <th>PnL + Fees <ToolTip tooltip={tooltips.AllTimePnl}/></th>
-                    <th>Avg PnL + Fees / position</th>
-                    <th>Portfolio APR <ToolTip tooltip={tooltips.APR}/></th>
-                </tr>
-                <tr>
                     <GreenRedTd value={TokenPnl} withPerc base={deposits} important />
-                    <GreenRedTd value={avgTokenPnl} important/>
                     <GreenRedTd value={fees} important/>
                     <GreenRedTd value={PnL} withPerc base={deposits} important/>
-                    <GreenRedTd value={avgPnL} important/>
-                    <GreenRedTd value={APR} prefix="" postfix="%" important/>
-                </tr> 
+                </tr>
             </>
         )
     }
 
     return (
         <>
-            <h2>Account Performance</h2>
             <div className='positionTable' id='closedPositions'>
+                <h2>Account Performance</h2>    
                 <table>
                     <tr>
                         <th>Total Positions</th>
                         <th>Total Days</th> 
-                        <th>Total Deposits</th>
-                        <th>Total Withdrawals</th>
-                        <th>Standard Deviation <ToolTip tooltip={tooltips.StdDev}/></th>
-                        <th>Sharpe Ratio <ToolTip tooltip={tooltips.sharpe}/></th>
+                        <th>Total USD Deposits</th>
+                        <th>Total USD Withdrawals</th>
+                        <th>Token PnL <ToolTip tooltip={tooltips.tokenPnL}/></th>
+                        <th>Total Fees<ToolTip tooltip={tooltips.fees}/></th>
+                        <th>PnL + Fees <ToolTip tooltip={tooltips.AllTimePnl}/></th>
                     </tr>
-                    
                     {
                         openPositions[0] || closedPositions[0]
-                            ? 
-                                <AccountTable/>
-                            : 
-                                <></>
+                        ? <AccountTable/>
+                        : placeholder
                     }
                 </table>
             </div>
         </>
     )
 }
+
+const placeholder = <tr>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+</tr>

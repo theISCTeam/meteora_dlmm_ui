@@ -15,9 +15,9 @@ export const PositionHeaders = ({open}) => {
             <th>Position Address</th>
             <th>Duration</th>
             {open ? <th>Status</th> :<></>}
-            <th>Initial USD Deposit Value<ToolTip tooltip={tooltips.usdHodl}/></th>
+            <th>USD Deposit Value<ToolTip tooltip={tooltips.usdHodl}/></th>
             <th>Token Pair HODL<ToolTip tooltip={tooltips.tokenHodl}/></th>
-            <th>Strategy<ToolTip tooltip={tooltips.strategy}/></th>
+            <th>Strategy USD value<ToolTip tooltip={tooltips.strategy}/></th>
             <th>Fees <ToolTip tooltip={tooltips.fees}/></th>
             <th>PnL <ToolTip tooltip={tooltips.pnl}/></th>
         </tr>

@@ -51,9 +51,9 @@ export const GreenRedTd = (
         return (
             value >= 0 
             ?
-            <td className={greenClasses}>{prefix}{value.toLocaleString()}{postfix} ({((value/base)*100).toLocaleString()}%)</td>
+            <td className={greenClasses}>{prefix}{value.toLocaleString()}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
             :
-            <td className={redClasses}>{prefix}{value.toLocaleString()}{postfix} ({((value/base)*100).toLocaleString()}%)</td>
+            <td className={redClasses}>{prefix}{value.toLocaleString()}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
         )
     }
 

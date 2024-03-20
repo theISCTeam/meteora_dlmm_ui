@@ -15,6 +15,7 @@ import {
     ConnectionContext, 
     PositionsContext 
 } from '../contexts/Contexts';
+import { PositionHeaders } from './PositionHeaders';
 
 export const Dashboard = () => {
     const {

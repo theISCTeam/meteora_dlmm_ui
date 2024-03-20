@@ -91,7 +91,6 @@ h2 {
 }
 
 #tracker {
-    max-width: 80vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -226,30 +225,13 @@ form label {
     color: black;
 }
 
-#positionTables {
-    margin-top: 5vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap:5vh;
-}
-
-.positionTable{
-    width: 80vw;
-    min-height: 10vh;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
 table {
+    position: relative;
     font-family: arial, sans-serif;
     border-collapse: collapse;
     font-weight: bold;
     border-radius: 15px;
-    width: 80vw;
     font-size: 20px;
-    margin-bottom: 10px;
 }
 
 th {
@@ -258,7 +240,9 @@ th {
 }
 
 td, th {
+    width: 8vw;
     border: 1px solid rgb(206, 206, 206);
+    border-right: none;
     padding: 8px;
     text-align: left;
 }
@@ -270,6 +254,39 @@ td {
 
 tr {
     color: black;
+    border-right: 1px solid rgb(206, 206, 206);
+}
+#positionTables {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.positionTable {
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+
+}
+.positionTable td {
+    width: 8vw;
+}
+
+.position{
+    margin-bottom: 10px;
+}
+
+.adjustments {
+    align-self: flex-start;
+    visibility: collapse;
+}
+.smolText {
+    font-size: 10px;
+}
+.mediumSmolText {
+    font-size: 14px;
 }
 
 .redTd {
@@ -292,6 +309,7 @@ tr {
     text-decoration: underline;
     text-align: start;
     cursor: pointer;
+    font-size: 18px;
 }
 
 .positionAddress a{
@@ -305,8 +323,19 @@ tr {
 
 .invisTd {
     background-color: rgba(255, 255, 255, 0);
-    border: none;
+    border-right: 1px solid rgb(206, 206, 206);
 }
+
+.expand {
+    cursor: pointer;
+    border: 1px solid  rgb(206, 206, 206);
+}
+
+.text-left {
+    text-align: left;
+}
+
+
 
 
 input:-webkit-autofill,

@@ -38,45 +38,70 @@ export async function parse_position_events (
             const event = events[i]
             switch (event.name) {
                 case 'AddLiquidity':
-                    position_adjustments.push({
-                        time:event.blocktime,
-                        action: 'add liquidity',
-                        x_amount: event.data.amounts[0].toNumber(),
-                        y_amount: event.data.amounts[1].toNumber(),
-                    })
+                    if (event.data.amounts[0].toNumber() + event.data.amounts[1].toNumber() !== 0) {
+                        position_adjustments.push({
+                            time:event.blocktime,
+                            action: 'add liquidity',
+                            x_amount: event.data.amounts[0].toNumber(),
+                            y_amount: event.data.amounts[1].toNumber(),
+                        });
+                    };
                     initial_x += event.data.amounts[0].toNumber();
                     initial_y += event.data.amounts[1].toNumber();
                     continue;
                 
                 case 'ClaimFee':
+                    if (event.data.feeX.toNumber() + event.data.feeY.toNumber() !== 0) {
+                        position_adjustments.push({
+                            time:event.blocktime,
+                            action: 'claim fees',
+                            x_amount: event.data.feeX.toNumber(),
+                            y_amount: event.data.feeY.toNumber(),
+                        });
+                    };
                     fees_x += event.data.feeX.toNumber();
                     fees_y += event.data.feeY.toNumber();
                     continue;
                     
                 case 'RemoveLiquidity':
-                    position_adjustments.push({
-                        time:event.blocktime,
-                        action: 'withdraw liquidity',
-                        x_amount: -event.data.amounts[0].toNumber(),
-                        y_amount: -event.data.amounts[1].toNumber(),
-                    });
+                    if (event.data.amounts[0].toNumber() + event.data.amounts[1].toNumber() !== 0) {
+                        position_adjustments.push({
+                            time:event.blocktime,
+                            action: 'withdraw liquidity',
+                            x_amount: event.data.amounts[0].toNumber(),
+                            y_amount: event.data.amounts[1].toNumber(),
+                        });
+                    };
                     final_x += event.data.amounts[0].toNumber();
                     final_y += event.data.amounts[1].toNumber();
                     continue;
     
                 case 'PositionCreate':
+                    // position_adjustments.push({
+                    //     time:event.blocktime,
+                    //     action: 'open position',
+                    //     x_amount: 0,
+                    //     y_amount: 0,
+                    // });
                     position = event.data.position;
                     lbPair = event.data.lbPair;
                     open_time = event.blocktime;
                     continue;
     
                 case 'PositionClose':
+                    // position_adjustments.push({
+                    //     time:event.blocktime,
+                    //     action: 'close position',
+                    //     x_amount: 0,
+                    //     y_amount: 0,
+                    // });
                     close_time = event.blocktime;     
                     continue;            
                 
                 default:
                     // Unhandled Event
-                    console.log(`Unexpected event: "${event.name}" encountered while parsing position events`)
+                    console.log(`Unexpected event: "${event.name}" encountered while parsing position events`);
+                    console.log(event);
             }
         }
     };

@@ -3,12 +3,11 @@ import { getDays } from "../sdk/utils/position_math"
 
 const adjustmentHeaders = (len) => {
     return (
-        <tr className="adjustmentHeaders">
+        <tr className="adjustmentHeaders adjustment">
             <th>Events ({len})</th>
             <th>Action</th>
-            <th>At Age</th>
+            <th>Date</th>
             <th>Amount</th>
-            <td className="invisTd"/>
         </tr>
     )
 }
@@ -25,11 +24,11 @@ export const Adjustments = ({item, lbInfo}) => {
     const tokenSymbols = lbInfo.name.split('-')
     item.position_adjustments.forEach(e => {
         adjustments.push(
-            <tr>
+            <tr className="adjustment">
                 <td className="invisTd"/>
-                <td>{e.action}</td>
-                <td>{getDays(item.open_time, e.time).toFixed(1)} days</td>
-                <td>
+                <td className="text-left">{e.action}</td>
+                <td className="text-left">{new Date(e.time*1000).toLocaleTimeString()} {new Date(e.time*1000).toLocaleDateString()}</td>
+                <td className="text-left">
                     {`${tokenSymbols[0]}: ${e.x_amount/10**item.decimals_x}`}
                     <br/>
                     {`${tokenSymbols[1]}: ${e.y_amount/10**item.decimals_y}`}

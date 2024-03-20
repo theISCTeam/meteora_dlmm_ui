@@ -63,6 +63,8 @@ export default async function parse_position (
         initial_y:parsed_position_data.initial_y,
         current_x:current_token_amounts.token_x_amount,
         current_y:current_token_amounts.token_y_amount,
+        withdrawn_x: parsed_position_data.final_x,
+        withdrawn_y: parsed_position_data.final_y,
         fees_x_claimed: parsed_position_data.fees_x,
         fees_y_claimed: parsed_position_data.fees_y,
         fees_x_unclaimed: unclaimed_fees.feeX.toNumber(),
