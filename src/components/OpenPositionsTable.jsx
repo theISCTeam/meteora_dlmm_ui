@@ -5,17 +5,22 @@ import {
     PositionsContext 
 } from "../contexts/Contexts";
 import { 
+    formatBigNum,
     getCurrent,
     getOpenPosFees, 
+    getPosPoints, 
     getTokenHodl, 
     getUsdAtOpen
 } from "../sdk/utils/position_math";
 import { Adjustments } from "./Adjustments";
 import { PositionHeaders } from "./PositionHeaders";
+import { get_price_of_bin } from "../sdk/utils/bin_math";
+import { getIsoStr, isInRange, placeholder } from "../sdk/utils/position_utils";
+import { ExpandBtn } from "./ExpandBtn";
 
 export const OpenPositionsTable = () => {
     const { openPositions } = useContext(PositionsContext);
-    const {pools} = useContext(PoolsContext);
+    const {pools, tokens} = useContext(PoolsContext);
 
     return (
         <>
@@ -35,7 +40,15 @@ export const OpenPositionsTable = () => {
                             const fees = getOpenPosFees(item);
                             const PnL =  current - usdHodl + fees;
                             const days = item.days;
-                            // console.log(item); 
+                            const points = getPosPoints(item, days, lbInfo.bin_step);
+                            const currentPrice = lbInfo.current_price;
+                            let lowerBinPrice, upperBinPrice
+                            const oDate = new Date(item.open_time*1000)
+                            const oDateStr = getIsoStr(oDate)
+                            if (item.range) {
+                                lowerBinPrice = get_price_of_bin(item.range.lowerBinId, lbInfo.bin_step);
+                                upperBinPrice = get_price_of_bin(item.range.lowerBinId+item.range.width, lbInfo.bin_step);
+                            }
                             return (<>
                                 <table>
                                     <tr>
@@ -44,18 +57,14 @@ export const OpenPositionsTable = () => {
                                                 href={`https://app.meteora.ag/dlmm/${item.lbPair.toString()}`} 
                                                 target="empty"
                                             >
-                                                {lbInfo.name}
+                                                <div className="poolLogos">
+                                                    <img className="poolLogo" src={tokens.find(e => e.symbol === symbols[0]).logoURI}></img>
+                                                    <img className="poolLogo" src={tokens.find(e => e.symbol === symbols[1]).logoURI}></img>
+                                                    {lbInfo.name}
+                                                </div>
                                             </a>
-                                            <button className="expand" onClick={() => {
-                                                const element = document.getElementById(`events${item.position.toString()}`)
-                                                console.log(element.style.visibility);
-                                                if (element.style.visibility === 'collapse') {
-                                                    element.style.visibility = 'visible'
-                                                }
-                                                else {
-                                                    element.style.visibility = 'collapse'
-                                                }
-                                            }}>{`Expand Events (${item.position_adjustments.length})`}</button>
+                                            <br/>
+                                            <ExpandBtn item={item}/>
                                         </td>
                                         <td className='positionAddress'>
                                             <a 
@@ -66,44 +75,53 @@ export const OpenPositionsTable = () => {
                                             </a>
                                         </td>
                                         <td>
-                                            <span> {days.toFixed(1)} Days</span>
+                                            <span className="mediumSmolText">Open: {oDateStr}</span>  
                                             <br/>
-                                            <span className="smolText">open :{new Date(item.open_time*1000).toLocaleTimeString()}{new Date(item.open_time*1000).toLocaleDateString()}</span>  
-                                        </td>
-                                        <td>{isInRange(item)}</td>
-                                        <td>
-                                            <span> ${usdHodl.toLocaleString()}</span>
-                                            <br/>
-                                            <span className="mediumSmolText">{symbols[0]}:{(item.initial_x/10**item.decimals_x).toLocaleString()} </span>  
-                                            |   <span className="mediumSmolText">{symbols[1]}:{(item.initial_y/10**item.decimals_y).toLocaleString()} </span>  
+                                            <span className="mediumText"> {days.toFixed(1)} Days</span>
                                         </td>
                                         <td>
-                                            <span> ${tokenHodl.toLocaleString()}</span>
+                                            {isInRange(item)} 
                                             <br/>
-                                            <span className="mediumSmolText">{symbols[0]}:{(item.initial_x/10**item.decimals_x).toLocaleString()} </span>  
-                                            | <span className="mediumSmolText">{symbols[1]}:{(item.initial_y/10**item.decimals_y).toLocaleString()} </span>  
+                                            <span className="">Price: {currentPrice.toFixed(6)}</span>
+                                            <br/> 
+                                            <span className="mediumSmolText">Range: {item.range ? `${lowerBinPrice.toFixed(6)} - ${upperBinPrice.toFixed(6)}`:"Failed To Get Range"}</span></td>                               
+                                        <td>
+                                            <span> ${formatBigNum(usdHodl)}</span>
+                                            <br/>
+                                              <span className="mediumSmolText">{symbols[0]}:{formatBigNum((item.initial_x/10**item.decimals_x))} </span>  
+                                            | <span className="mediumSmolText">{symbols[1]}:{formatBigNum(item.initial_y/10**item.decimals_y)} </span>  
                                         </td>
                                         <td>
-                                            <span> ${current.toLocaleString()}</span>
+                                            <span> ${formatBigNum(tokenHodl)}</span>
                                             <br/>
-                                            <span className="mediumSmolText">{symbols[0]}:{(item.current_x/10**item.decimals_x).toLocaleString()} </span>
-                                            | <span className="mediumSmolText">{symbols[1]}:{(item.current_y/10**item.decimals_y).toLocaleString()} </span>  
+                                              <span className="mediumSmolText">{symbols[0]}:{formatBigNum(item.initial_x/10**item.decimals_x)} </span>  
+                                            | <span className="mediumSmolText">{symbols[1]}:{formatBigNum(item.initial_y/10**item.decimals_y)} </span>  
                                         </td>
                                         <td>
-                                            <span className="smolText">claimed {symbols[0]}:{((item.fees_x_claimed)/10**item.decimals_x).toLocaleString()} </span>  
-                                            | <span className="smolText">{symbols[1]}:{((item.fees_y_claimed)/10**item.decimals_y).toLocaleString()} </span>  
+                                              <span className="smolText">withdrawn: {symbols[0]}:{formatBigNum(item.withdrawn_x/10**item.decimals_x)} </span>
+                                            | <span className="smolText">{symbols[1]}:{formatBigNum(item.withdrawn_y/10**item.decimals_y)} </span>  
                                             <br/>
-                                            <span> ${fees.toLocaleString()}</span>
+                                            <span> ${formatBigNum(current)}</span>
                                             <br/>
-                                            <span className="smolText">unclaimed {symbols[0]}:{((item.fees_x_unclaimed)/10**item.decimals_x).toLocaleString()} </span>  
-                                            | <span className="smolText">{symbols[1]}:{((item.fees_y_unclaimed)/10**item.decimals_y).toLocaleString()} </span>  
+                                              <span className="smolText">active: {symbols[0]}:{formatBigNum(item.current_x/10**item.decimals_x)} </span>
+                                            | <span className="smolText">{symbols[1]}:{formatBigNum(item.current_y/10**item.decimals_y)} </span>  
+                                        </td>
+                                        <td>
+                                              <span className="smolText">claimed {symbols[0]}:{formatBigNum(item.fees_x_claimed/10**item.decimals_x)} </span>  
+                                            | <span className="smolText">{symbols[1]}:{formatBigNum(item.fees_y_claimed/10**item.decimals_y)} </span>  
+                                            <br/>
+                                            <span> ${formatBigNum(fees)}</span>
+                                            <br/>
+                                              <span className="smolText">unclaimed {symbols[0]}:{(formatBigNum(item.fees_x_unclaimed/10**item.decimals_x))} </span>  
+                                            | <span className="smolText">{symbols[1]}:{formatBigNum(item.fees_y_unclaimed/10**item.decimals_y)} </span>  
                                         </td>
                                         <GreenRedTd 
                                             value={PnL} 
                                             withPerc={true} 
                                             base={tokenHodl}
                                             important={true}
-                                            />
+                                        />
+                                        <td>{formatBigNum(points)}</td>
                                     </tr>
                                 </table>
                                 <table className="adjustments" id={`events${item.position.toString()}`}>
@@ -118,22 +136,3 @@ export const OpenPositionsTable = () => {
         </>
     );
 };
-
-const placeholder = <tr>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-</tr>
-
-const isInRange = (pos) => {
-    if(pos.current_x.toNumber() > 0 && pos.current_y.toNumber() > 0 ) {
-        return 'in range'
-    }
-    return 'out of range'
-}

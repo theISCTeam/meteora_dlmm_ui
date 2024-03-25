@@ -5,6 +5,7 @@ import {
     useEffect 
 } from "react";
 import { 
+    formatBigNum,
     getAPR,
 } from "../sdk/utils/position_math";
 import { GreenRedTd } from "./GreenRedTd";
@@ -12,11 +13,16 @@ import {
     getAccountDays, 
     getAccountDeposits, 
     getAccountRewards, 
+    getAccountTokenHodl, 
     getAccountUsdHodl, 
     getAccountValue,
+    getNoOfBins,
+    getNoOfPools,
     getSTDvFromPositions,
-    getSharpeRatio
+    getSharpeRatio,
+    getTotalPoints
 } from "../sdk/utils/account_math";
+import { placeholder } from "../sdk/utils/position_utils";
 
 const tooltips =  {
     APR: 'Your combined returns over the amount of days you have provided Liquidity '
@@ -30,6 +36,7 @@ const tooltips =  {
     + 'holding your initial tokens amounts without market making. '
     + '* A number over 3 is considered excellent. * A number over 1 is considered acceptable. '
     + '* A number less than 1 is generally evidence of a poor investment.',
+    points: 'Your Estimated MET points (Not including ANY multipliers)'
 };
   /**
     * A table that summarizes your positions once either open or closed positions are available
@@ -47,31 +54,31 @@ export const AccountSummary = () => {
             openPositions.length 
             + closedPositions.length
         );
+        
         const positions = {openPositions, closedPositions};
-        const HODL = getAccountUsdHodl(positions);
+        const noOfPools = getNoOfPools(positions);
+        const noOfBins = getNoOfBins(positions)
         const deposits = getAccountDeposits(positions);
         const fees = getAccountRewards(positions);
         const value = getAccountValue(positions);
+        const tokenHodl = getAccountTokenHodl(positions)
         const days = getAccountDays(positions);
-        const TokenPnl = value - deposits;
         const PnL = value - deposits + fees
-        const avgPnL = PnL/noOfPositions;
-        const avgTokenPnl = TokenPnl /noOfPositions;
-        let APR = getAPR(PnL, days, deposits);
+        const {totalPoints, multiplier} = getTotalPoints(positions)
  
         return (
             <>
                 <tr>
-                    <td>#of POOLS <br/> Coming soon</td>
-                    <td>{openPositions.length + closedPositions.length} Positions</td>
-                    <td>{days ? days : '-' } Days</td>
-                    <td>Time In Range% <br/> Coming soon</td>
+                    <td>{noOfPools}</td>
+                    <td>{noOfPositions} Positions</td>
+                    <td>{days ? days : '-'} Days</td>
+                    <td>{noOfBins}</td>
                     <td>${deposits.toLocaleString()}</td>
-                    <td>${value.toLocaleString()}</td>
-                    <td>TOTAL STRAT VAL <br/> Coming soon</td>
-                    {/* <GreenRedTd value={TokenPnl} withPerc base={deposits} important /> Need to calc this */}
+                    <td>${tokenHodl.toLocaleString()}</td>
+                    <td>{value.toLocaleString()}</td>
                     <GreenRedTd value={fees} important/>
                     <GreenRedTd value={PnL} withPerc base={deposits} important/>
+                    <td>{formatBigNum(totalPoints)}</td>
                 </tr>
             </>
         )
@@ -86,13 +93,13 @@ export const AccountSummary = () => {
                         <th>Used Pools</th>
                         <th>Total Positions</th>
                         <th>Total Days</th> 
-                        <th>Time In Range</th>
-                        <th>Total USD Deposits</th>
-                        <th>Total Token HODL</th>
-                        <th>Total Token Strategy</th> {/* Need to calc this */}
-                        {/* <th>Token PnL <ToolTip tooltip={tooltips.tokenPnL}/></th> */}
-                        <th>Total Fees<ToolTip tooltip={tooltips.fees}/></th>
-                        <th>Total PnL<ToolTip tooltip={tooltips.AllTimePnl}/></th>
+                        <th>Total bins</th>
+                        <th>Total Deposits ($)</th>
+                        <th>Total Token HODL ($)</th>
+                        <th>Total DLMM ($)</th> {/* Need to calc this */}
+                        <th>Total Fees ($)<ToolTip tooltip={tooltips.fees}/></th>
+                        <th>Total PnL ($)<ToolTip tooltip={tooltips.AllTimePnl}/></th>
+                        <th>Estimated MET Points<ToolTip tooltip={tooltips.points}/></th>
                     </tr>
                     {
                         openPositions[0] || closedPositions[0]
@@ -104,13 +111,3 @@ export const AccountSummary = () => {
         </>
     )
 }
-
-const placeholder = <tr>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-</tr>

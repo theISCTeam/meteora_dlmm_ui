@@ -1,8 +1,10 @@
 import { 
     getClosedPosFees, 
     getCurrent, 
+    getDays, 
     getFinal, 
     getOpenPosFees, 
+    getPosPoints, 
     getTokenHodl, 
     getUsdAtOpen 
 } from "./position_math";
@@ -88,6 +90,21 @@ export function getAccountUsdHodl({openPositions, closedPositions}) {
     return value;
 };
 /** 
+*  Returns deposits for all positions in USD (same as getAccountDeposits)
+   * @param  {Object} positions Object containing two parsed position object arrays {openPositions, closedPositions}
+   * @return value as number
+*/
+export function getAccountTokenHodl({openPositions, closedPositions}) {
+    let value = 0;
+    for (let item of closedPositions){
+        value += getTokenHodl(item);
+    };
+    for (let item of openPositions) {
+        value += getTokenHodl(item);
+    };
+    return value;
+};
+/** 
 *  Returns combined sharpe ratio for portfolio
    * @param {number} Rx Expected risk free portfolio return
    * @param {number} Rf Expected portfolio return
@@ -144,4 +161,58 @@ export function getSTDvFromPositions (open_positions, closed_positions) {
     })
     const STDv =  Math.sqrt(sum/(n-1));
     return STDv;
+}
+
+export function getNoOfPools ({openPositions, closedPositions}) {
+    let pools = []
+    for (let item of closedPositions){
+        const pool = item.lbPair.toString()
+        if (pools.indexOf(pool)  === -1){
+            pools.push(pool)
+        }
+    };
+    for (let item of openPositions) {
+        const pool = item.lbPair.toString()
+        if (pools.indexOf(pool)  === -1){
+            pools.push(pool)
+        }
+    };
+    return pools.length
+}
+
+export function getNoOfBins({openPositions, closedPositions}){
+    const allPos = openPositions.concat(closedPositions);
+    let totalBins = 0;
+    for (let pos of allPos) {
+        if (pos.range) {
+            totalBins += pos.range.width;
+        }
+    }
+    return totalBins;
+}
+
+export function getTotalPoints({openPositions, closedPositions}) {
+/*     1.3x multiplier for OG’s before Dec 1st 2023 at launch.
+    1.25x multiplier for everyone else at launch. This reduces to 1.20x in Mar, 1.1x in Apr */
+    const ogDeadline = 1701388800;
+    const launch = 1706659200;
+    const mar = 1709251200;
+    const apr = 1711929600;
+
+    const allPos = openPositions.concat(closedPositions);
+    let totalPoints = 0;
+    let earliest = 9999999999;
+    for (let pos of allPos) {
+        const days = getDays(pos.open_time, pos.close_time)
+        totalPoints += getPosPoints(pos, days);
+        if(pos.open_time < earliest) {earliest = Math.round(pos.open_time)}
+    }
+
+    let multiplier = 1;
+    if (apr > earliest) {multiplier = 1.1};
+    if (mar > earliest) { multiplier = 1.2};
+    if (launch > earliest) {multiplier = 1.25};
+    if (ogDeadline > earliest) {multiplier = 1.3};
+    
+    return {totalPoints, multiplier};
 }

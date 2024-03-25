@@ -1,3 +1,5 @@
+import { get_price_of_bin } from "./bin_math";
+
 /** 
 *  Returns USD value of position at Open
    * @param  {Object} pos Parsed Position
@@ -31,6 +33,7 @@ export const getCurrent = (pos) => {
     const amt_y = (((Number(pos.current_y)+Number(pos.withdrawn_y)) / (10**pos.decimals_y))*pos.y_price.last);
     return (amt_x+amt_y);
 };
+
 
 /** 
 * Returns USD value of final asset dist at last price 
@@ -108,3 +111,72 @@ export const getAPR = (
     };
     return APR;
 };
+
+
+export const formatBigNum = (value) => {
+    if (value > 1 && value < 1000) {
+        return value.toFixed(2)
+    }
+    else if (value > 1000 &&  value < 10**6) {
+        return (value/1000).toFixed(2) + "K"
+    }
+    else if (value > 10**6) {
+        return (value/10**6).toFixed(2) + "M"
+    }
+    else {
+        return value.toLocaleString()
+    }
+}
+
+export const getPosPoints = (pos, days, binStep) => {
+    const points_start = 1706659200;
+    const events = pos.position_adjustments;
+    const { x_price, y_price } = pos;
+    const x_prices = x_price.all;
+    const y_prices = y_price.all;
+
+    let current_event = events[0];
+    const max_events = events.length - 1;
+    let eventIndex = 0;
+    let amt_x = current_event.x_amount;
+    let amt_y = current_event.y_amount;
+
+    if(pos.days <= 1 || x_prices.length === 1) {
+        if(pos.close_time) {
+            return (getUsdAtOpen(pos)*pos.days)+(getClosedPosFees(pos)*1000);
+        };
+        return (getUsdAtOpen(pos)*pos.days)+(getOpenPosFees(pos)*1000);
+    };
+
+    const points_arr = x_prices.map((entry, i) => {
+        if(entry.unixTime < points_start) {
+            return 0;
+        }
+        if(eventIndex + 1 <= max_events && entry.unixTime > events[eventIndex+1].time) {
+            eventIndex++;
+            current_event = events[eventIndex];  
+            if(current_event.action === 'add liquidity'){
+                amt_x += current_event.x_amount
+                amt_y += current_event.y_amount
+            }
+            else if(current_event.action === 'withdraw liquidity'){
+                amt_x = current_event.x_amount*((10000/current_event.bps)-1);
+                amt_y = current_event.y_amount*((10000/current_event.bps)-1);
+            }
+        }
+        if(i+1 <= x_prices.length -1) {
+            return (((amt_x/10**pos.decimals_x)*x_prices[i].value) + ((amt_y/10**pos.decimals_y)*y_prices[i].value))*((x_prices[i+1].unixTime-entry.unixTime)/86400)
+        }
+        else {
+            return 0;
+        }
+    }) 
+    let points = 0;
+    for (let points_entry of points_arr) {
+        points += points_entry;
+    }
+    if(!pos.fees_x_unclaimed) {
+        return points + getClosedPosFees(pos)*1000; 
+    }
+    return points + getOpenPosFees(pos)*1000;
+}

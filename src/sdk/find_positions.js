@@ -1,8 +1,9 @@
 import { fetch_with_retry, get_signatures_for_address, sleep } from "./utils/utils";
 import parse_position  from "./parse_open_positions";
-import { Program, utils } from "@coral-xyz/anchor";
+import { BorshCoder, Program, utils } from "@coral-xyz/anchor";
 import bs58 from "bs58";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import { PublicKey, TransactionResponse } from "@solana/web3.js";
+import idl from '../sdk/constants/meteora_dlmm_idl.json'
 
 /**
  * Returns object array of position addresses with events
@@ -11,7 +12,7 @@ import { PublicKey, Transaction } from "@solana/web3.js";
  * @return {Object[]} Returns a parsed Object array of  positions
  */
 export async function find_positions_with_events (pubkey, program) {
-    const signatures = await fetch_with_retry(get_signatures_for_address, pubkey, program) 
+    const signatures = await fetch_with_retry(get_signatures_for_address, pubkey, program);
     return fetch_and_sort_transactions_into_positions(signatures, program);
 }
 
@@ -35,30 +36,30 @@ const fetch_and_sort_transactions_into_positions = async (signatures, program) =
  */
 const fetch_parsed_transactions_from_signature_array = async (signatures, program) => {
     let parsed_transactions = [];
-    for(let i = 0; i < signatures.length; i+=250) {
-        sleep(500)
-        let res = []
+    let promises = []
+    for(let i = 0; i < signatures.length; i+=1000) {
         try {
-            res = await program.provider.connection.getParsedTransactions(signatures.slice(i, i+250), {maxSupportedTransactionVersion: 0});
-            if (!res.length)  {throw new Error('result is not an array')}
-            parsed_transactions = parsed_transactions.concat(res);
+            promises.push(program.provider.connection.getParsedTransactions(signatures.slice(i, i+1000), {maxSupportedTransactionVersion: 0}));
         }
         catch(e) {
             throw new Error('Failed to get txs, retrying')
         }
     }
+    const resolved = await Promise.all(promises);
+    parsed_transactions = [].concat.apply([], resolved);
     return parsed_transactions;
 };
 /**
  * Parses events for transactions and sorts them into 
- * @param  {Transaction[]} transactions List of transactions
+ * @param  {import("@solana/web3.js").TransactionResponse[]} transactions List of transactions
  * @param  {Program} program Anchor Program Instance
  * @return {Object[]} Returns an Object array of Transactions
 */
-const sort_transaction_array_into_positions_with_events = (transactions, program) => {
+const sort_transaction_array_into_positions_with_events = async (transactions, program) => {
     let all_positions = {}; 
     for(let tx of transactions) {
-        const events = get_events_for_transaction(tx, program);
+        let events = get_events_for_transaction(tx, program);
+        // console.log(events);
         if (events.length !== 0 && events[0].name !== 'Swap') {
             let position = '';
             if (events[0].name === 'CompositionFee') {
@@ -71,14 +72,15 @@ const sort_transaction_array_into_positions_with_events = (transactions, program
             }
             else {all_positions[position.toString()].push(events)};
         }
+    
     }
-
     const sorted_positions = sort_positions(all_positions);
+    // console.log(sorted_positions);
     return sorted_positions;
 };
 /**
  * Parses events for transactions and sorts them into 
- * @param  {Transaction} transaction Solana getTransaction response
+ * @param  {TransactionResponse} tx Solana getTransaction response
  * @param  {Program} program Anchor Program Instance
  * @return {Object[]} Returns an Object array of OPosition Events
 */
@@ -96,14 +98,63 @@ const get_events_for_transaction = (tx, program) => {
                 const eventData = utils.bytes.base64.encode(ixData.subarray(8));
                 let event = program.coder.events.decode(eventData);
                 if (!event) return 0;
+                if(event.name === 'PositionCreate') {
+                    event.range = get_range_for_position(tx, program);
+                }
+                if(event.name === 'RemoveLiquidity') {
+                    event.bps = get_removed_bps(tx, program);
+                }
                 event.blocktime = tx.blockTime;
-                
                 events.push(event);
                 return 0;
             });
         });
     };
     return events;
+};
+
+/**
+ * Parses events for transactions and sorts them into 
+ * @param  {TransactionResponse} tx Solana getTransaction response
+ * @param  {Program} program Anchor Program Instance
+ * @return {Object[]} Returns an Object array of OPosition Events
+*/
+function get_range_for_position(tx, program) {
+    // Newer positions have range instructions at index 1
+    const ixs = tx.transaction.message.instructions;
+    for(let ix of ixs) {
+        try {
+            const range = program.coder.instruction.decode(
+                ix.data,
+                'base58',
+            );
+            if (range.data.width) {
+                return range.data
+            }
+        } 
+        catch (e){
+            console.log(e);
+        }
+    }
+};
+
+function get_removed_bps(tx, program) {
+    // Newer positions have range instructions at index 1
+    const ixs = tx.transaction.message.instructions;
+    for(let ix of ixs) {
+        try {
+            const range = program.coder.instruction.decode(
+                ix.data,
+                'base58',
+            );
+            if (range.data.binLiquidityRemoval) {
+                return range.data.binLiquidityRemoval[0].bpsToRemove
+            }
+        } 
+        catch (e){
+            console.log(e);
+        }
+    }
 };
 /**
  * Sorts positions into open and closed
@@ -116,7 +167,7 @@ const sort_positions = (positions) => {
 
     for (let key in positions) {
         const position = positions[key];
-        if(position[0][2] && position[0][2].name === 'PositionClose') {
+        if(position[0].find(e => e.name === 'PositionClose') !== undefined ) {
             closed_positions[key] = position;
             continue;
         };
@@ -127,7 +178,7 @@ const sort_positions = (positions) => {
 
 /**
  * Finds open positions from Program Account
- * @param  {PublicKey]} user_pubkey Target address
+ * @param  {PublicKey} user_pubkey Target address
  * @param  {Program} transactions Anchor Program Instance
  * @param  {string} transactions Birdeye API key
  * @return {Object} Returns an Object containing 2 Object arrays of Open Positions

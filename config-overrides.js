@@ -5,6 +5,8 @@ module.exports = function override(config) {
     Object.assign(fallback, { 
       "crypto": require.resolve("crypto-browserify"), 
       "stream": require.resolve("stream-browserify"), 
+      "zlib": require.resolve("browserify-zlib"),
+      "path": require.resolve("path-browserify"),
       "assert": require.resolve("assert"), 
       "http": require.resolve("stream-http"), 
       "https": require.resolve("https-browserify"), 
@@ -18,4 +20,5 @@ module.exports = function override(config) {
       Buffer: ['buffer', 'Buffer'] 
     }) 
    ]) 
-   return config; }
+   return config; 
+}

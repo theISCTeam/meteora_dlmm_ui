@@ -16,7 +16,7 @@ export const fetch_and_parse_closed_positions = async (address, connection, API_
     const pubkey = new PublicKey(address);
     const program = get_program_instance(connection);
     
-    const { closed_positions } = await find_positions_with_events(pubkey, program)
+    const { closed_positions } = await find_positions_with_events(pubkey, program);
     const parsed_closed_positions = await parse_closed_positions(closed_positions, program, API_KEY);
     
     return parsed_closed_positions

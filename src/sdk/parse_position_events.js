@@ -4,7 +4,8 @@ import {
     get_account_info, 
     get_multiple_token_prices_history, 
     get_multiple_token_prices_history_in_range, 
-    get_token_info 
+    get_token_info, 
+    get_token_metadata
 } from "./utils/utils";
 
 
@@ -31,9 +32,10 @@ export async function parse_position_events (
     let open_time = 0; // Timestamp
     let close_time = Math.floor(Date.now()/1000); // Timestamp
     let position_adjustments = [] // Entries
-
+    let range;
     for(let key in position_transactions) {
         const events = position_transactions[key];
+        // console.log(events);
         for (let i in events) {
             const event = events[i]
             switch (event.name) {
@@ -70,6 +72,7 @@ export async function parse_position_events (
                             action: 'withdraw liquidity',
                             x_amount: event.data.amounts[0].toNumber(),
                             y_amount: event.data.amounts[1].toNumber(),
+                            bps: event.bps
                         });
                     };
                     final_x += event.data.amounts[0].toNumber();
@@ -83,6 +86,7 @@ export async function parse_position_events (
                     //     x_amount: 0,
                     //     y_amount: 0,
                     // });
+                    range = event.range
                     position = event.data.position;
                     lbPair = event.data.lbPair;
                     open_time = event.blocktime;
@@ -115,6 +119,7 @@ export async function parse_position_events (
         lbPair, 
         program
     );
+    
     const {
         decimals:decimals_x
     } = await fetch_with_retry(
@@ -122,6 +127,7 @@ export async function parse_position_events (
         tokenXMint, 
         program
     );
+
     const {
         decimals:decimals_y
     } = await fetch_with_retry(
@@ -178,8 +184,9 @@ export async function parse_position_events (
         close_time,
         decimals_x,
         decimals_y,
-        x_price : {open: xopen, last:xclose},
-        y_price : {open: yopen, last:yclose},
+        range,
+        x_price : {open: xopen, last:xclose, all:xprices},
+        y_price : {open: yopen, last:yclose, all:yprices},
         position_adjustments
     };
 };  

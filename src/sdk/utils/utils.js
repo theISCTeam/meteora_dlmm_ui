@@ -1,7 +1,6 @@
 // const API_KEY = 'dd0abee4829046c49d1052b3a78d6afd';
 import { Program } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
-
 /* ------------------------------------sleep-------------------------------------- */
 /** 
 Sleeps for (delay) milliseconds
@@ -26,7 +25,7 @@ export async function fetch_with_retry (callback, ...params) {
       } catch (e) {
         retries++;
         console.log(e);
-        console.log('waiting 500ms to fetch again');
+        console.log('waiting 500ms to fetch again function: ' + callback.name);
         await sleep(500)
       }
     }
@@ -38,11 +37,25 @@ export async function fetch_with_retry (callback, ...params) {
 Gets and returns token info
 * @param  {PublicKey} token_mint Token mint address as PublicKey
 * @param  {Program} program An initialized Anchor program instance
-* @return Resolved Promise
+* @return Resolved Promise with token info
 */
 export async function get_token_info (token_mint, program) {
     const info = await  program.provider.connection.getParsedAccountInfo(token_mint, 'finalized')
     return info.value.data.parsed.info;
+};
+
+
+/* -----------------------------------get_token_metadata--------------------------------------- */
+/** 
+Gets and returns token info
+* @param  {PublicKey} token_mint Token mint address as PublicKey
+* @param  {Program} program An initialized Anchor program instance
+* @return Resolved Promise with token metadata
+*/
+export async function get_token_metadata (token_mint, program) {
+    const connection = program.provider.connection  
+
+
 };
 
 /* --------------------------------get_account_info------------------------------------------ */

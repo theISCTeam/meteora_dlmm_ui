@@ -40,8 +40,6 @@ export default async function parse_position (
         position_info
     );
 
-    console.log(binArrays);
-
     const current_token_amounts = get_position_current_amount(
         binStep, 
         binArrays, 
@@ -71,6 +69,7 @@ export default async function parse_position (
         fees_y_unclaimed: unclaimed_fees.feeY.toNumber(),
         open_time: parsed_position_data.open_time,
         days:parsed_position_data.days,
+        range: parsed_position_data.range,
         close_time: Math.ceil((parsed_position_data.close_time)),
         x_price, y_price, 
         decimals_x, decimals_y,

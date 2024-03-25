@@ -21,18 +21,21 @@ function App() {
     const [ openPositions, setOpenPositions ] = useState([])
     const [ closedPositions, setClosedPositions ] = useState([])
     const [ pools, setPools ] = useState([])
+    const [ tokens, setTokens ] = useState([])
 
     useEffect(() => {
         const getPools = async () => {
-            let pls = await get_pools(connection)
-            setPools(pls)
+            let pls = await get_pools(connection);
+            let tkns = await(await fetch('https://token.jup.ag/all')).json();
+            setPools(pls);
+            setTokens(tkns);
         }
         getPools()
     }, [])
 
     useEffect(() => {
-
-    }, [pools])
+        // console.log(tokens);
+    }, [pools, tokens])
 
     useEffect(() => {
         setConnection(new Connection(rpc));
@@ -46,7 +49,7 @@ function App() {
             setApiKey, 
             connection
         }}>   
-            <PoolsContext.Provider value={{pools}}>
+            <PoolsContext.Provider value={{pools, tokens}}>
                 <PositionsContext.Provider value={{
                     openPositions, 
                     closedPositions, 

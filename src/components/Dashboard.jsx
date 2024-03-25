@@ -9,6 +9,7 @@ import {
 } from '../sdk/fetch_and_parse_positions';
 import { 
     useContext, 
+    useEffect, 
     useState 
 } from 'react';
 import { 
@@ -16,6 +17,9 @@ import {
     PositionsContext 
 } from '../contexts/Contexts';
 import { PositionHeaders } from './PositionHeaders';
+import { get_signatures_for_address } from '../sdk/utils/utils';
+import { get_program_instance } from '../sdk/utils/get_program';
+import { Loader } from './Loader';
 
 export const Dashboard = () => {
     const {
@@ -30,10 +34,12 @@ export const Dashboard = () => {
     
     const [ loadingOpen, setLoadingOpen ] = useState(false);
     const [ fetchInterval, setFetchInterval] = useState(undefined);
+    const [sigLen, setSigLen] = useState(undefined);
 
     const fetch = async (address) => {
         if (loadingOpen) {return};
         setLoadingOpen(true);
+
         document.getElementById('submitAddressBtn').innerHTML = 'Searching';
         var dots = window.setInterval( function() {
             var wait = document.getElementById('submitAddressBtn');
@@ -41,7 +47,11 @@ export const Dashboard = () => {
                 wait.innerHTML = "Searching";
             else 
                 wait.innerHTML += ".";
-            }, 500);
+        }, 500);
+        const program = get_program_instance(connection)
+        const signatures = await get_signatures_for_address(new PublicKey(address), program);
+        
+        setSigLen(signatures.length);
         try {
             const open_positions = await fetch_and_parse_open_positions(address, connection, apiKey);
             setOpenPositions(open_positions);
@@ -51,9 +61,11 @@ export const Dashboard = () => {
         catch(e) {
             console.log(e);
             setLoadingOpen(false);
+            setSigLen(undefined)
             clearInterval(dots)
         }
         setLoadingOpen(false);
+        setSigLen(undefined)
         document.getElementById('submitAddressBtn').innerHTML = 'Search'
         clearInterval(dots)
     }
@@ -85,6 +97,8 @@ export const Dashboard = () => {
         setFetchInterval(inter);
     };
 
+    useEffect(() => {}, [sigLen])
+
     return (
         <div id='tracker'>
             {/* <p className='white-p'>{`RPC: ${rpc}`}</p> */}
@@ -98,6 +112,12 @@ export const Dashboard = () => {
                     <button type='submit' id='submitAddressBtn'>Search</button>
                 </div>
             </form>
+
+            {
+                sigLen 
+                ? <Loader sigLen={sigLen} /> 
+                : <></>
+            }  
 
             <div id='positionTables'>
                 <AccountSummary/>
