@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/meteora_dlmm_ui/static/css/main.76477695.css",
-    "main.js": "/meteora_dlmm_ui/static/js/main.44c703a0.js",
+    "main.css": "/meteora_dlmm_ui/static/css/main.a19ef851.css",
+    "main.js": "/meteora_dlmm_ui/static/js/main.7d53330f.js",
     "static/js/453.9b41687b.chunk.js": "/meteora_dlmm_ui/static/js/453.9b41687b.chunk.js",
     "index.html": "/meteora_dlmm_ui/index.html",
-    "main.76477695.css.map": "/meteora_dlmm_ui/static/css/main.76477695.css.map",
-    "main.44c703a0.js.map": "/meteora_dlmm_ui/static/js/main.44c703a0.js.map",
+    "main.a19ef851.css.map": "/meteora_dlmm_ui/static/css/main.a19ef851.css.map",
+    "main.7d53330f.js.map": "/meteora_dlmm_ui/static/js/main.7d53330f.js.map",
     "453.9b41687b.chunk.js.map": "/meteora_dlmm_ui/static/js/453.9b41687b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.76477695.css",
-    "static/js/main.44c703a0.js"
+    "static/css/main.a19ef851.css",
+    "static/js/main.7d53330f.js"
   ]
 }
