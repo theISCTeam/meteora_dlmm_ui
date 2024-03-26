@@ -12,7 +12,7 @@ import {
    * @param  {String}  API_KEY Birdeye Api Key
    * @return {Object[]} Returns a parsed array of closed positions
    */
-export const fetch_and_parse_closed_positions = async (address, connection, API_KEY) => {
+export async function fetch_and_parse_closed_positions (address, connection, API_KEY) {
     const pubkey = new PublicKey(address);
     const program = get_program_instance(connection);
     
@@ -21,13 +21,14 @@ export const fetch_and_parse_closed_positions = async (address, connection, API_
     
     return parsed_closed_positions
 }
+
   /**
    * @param  {String}  Address  Address to search positions for
    * @param  {Connection} connection @solana/web3.js RPC connection
    * @param  {String}  API_KEY Birdeye Api Key
    * @return {Object[]} Returns a parsed array of open positions
    */
-export const fetch_and_parse_open_positions = async (address_string, connection, API_KEY) => {
+export async function fetch_and_parse_open_positions (address_string, connection, API_KEY) {
     const pubkey = new PublicKey(address_string);
     const program = get_program_instance(connection);
 

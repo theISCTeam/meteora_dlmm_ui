@@ -29,7 +29,7 @@ export const Loader = ({sigLen}) => {
         <div className="loader">
             <img src="./loader.gif"/>
             <div>
-                <h1>Loading {formatBigNum(sigLen)} transactions</h1>
+                <h1>Loading {sigLen > 1000 ? formatBigNum(sigLen) : sigLen} transactions</h1>
                 <div className="progressBar" id="progressBar">
                     <div id="progress"></div>
                 </div>

@@ -18,10 +18,13 @@ function App() {
     const [ rpc, setRpc ] = useState(DEFAULT_RPC);
     const [ apiKey, setApiKey ] = useState(DEFAULT_BIRDEYE_KEY);
     const [ connection, setConnection ] = useState(new Connection(DEFAULT_RPC));
-    const [ openPositions, setOpenPositions ] = useState([])
-    const [ closedPositions, setClosedPositions ] = useState([])
-    const [ pools, setPools ] = useState([])
-    const [ tokens, setTokens ] = useState([])
+    const [ openPositions, setOpenPositions ] = useState([]);
+    const [ openSortedPositions, setOpenSortedPositions ] = useState([]);
+    const [ closedPositions, setClosedPositions ] = useState([]);
+    const [ closedSortedPositions, setClosedSortedPositions ] = useState([]);
+    const [ disabledPools, setDisabledPools ] = useState([]);
+    const [ pools, setPools ] = useState([]);
+    const [ tokens, setTokens ] = useState([]);
 
     useEffect(() => {
         const getPools = async () => {
@@ -49,16 +52,26 @@ function App() {
             setApiKey, 
             connection
         }}>   
-            <PoolsContext.Provider value={{pools, tokens}}>
+            <PoolsContext.Provider value={{
+                pools, 
+                tokens, 
+                disabledPools, 
+                setDisabledPools
+            }}>
                 <PositionsContext.Provider value={{
                     openPositions, 
                     closedPositions, 
                     setClosedPositions, 
-                    setOpenPositions
+                    setOpenPositions,
+                    openSortedPositions,
+                    setOpenSortedPositions,
+                    closedSortedPositions,
+                    setClosedSortedPositions
                 }}>
                     <div className="App">
                         <Header/>
                         <Dashboard/>
+                        <footer>Socials</footer>
                     </div>
                 </PositionsContext.Provider>
             </PoolsContext.Provider>

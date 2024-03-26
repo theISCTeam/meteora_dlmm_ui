@@ -14,12 +14,13 @@ import {
 } from 'react';
 import { 
     ConnectionContext, 
+    PoolsContext, 
     PositionsContext 
 } from '../contexts/Contexts';
-import { PositionHeaders } from './PositionHeaders';
 import { get_signatures_for_address } from '../sdk/utils/utils';
 import { get_program_instance } from '../sdk/utils/get_program';
 import { Loader } from './Loader';
+import { processPositions } from '../sdk/utils/position_utils';
 
 export const Dashboard = () => {
     const {
@@ -27,14 +28,18 @@ export const Dashboard = () => {
         connection
     } = useContext(ConnectionContext);
 
+    const {pools} = useContext(PoolsContext)
+
     const {
         setClosedPositions, 
-        setOpenPositions
+        setOpenPositions,
+        setOpenSortedPositions,
+        setClosedSortedPositions,
     } = useContext(PositionsContext);
     
     const [ loadingOpen, setLoadingOpen ] = useState(false);
     const [ fetchInterval, setFetchInterval] = useState(undefined);
-    const [sigLen, setSigLen] = useState(undefined);
+    const [ sigLen, setSigLen ] = useState(undefined);
 
     const fetch = async (address) => {
         if (loadingOpen) {return};
@@ -48,15 +53,34 @@ export const Dashboard = () => {
             else 
                 wait.innerHTML += ".";
         }, 500);
+
         const program = get_program_instance(connection)
         const signatures = await get_signatures_for_address(new PublicKey(address), program);
-        
         setSigLen(signatures.length);
+
         try {
+            // fetch and build open positions
             const open_positions = await fetch_and_parse_open_positions(address, connection, apiKey);
-            setOpenPositions(open_positions);
+            console.log('setting open');
+            if (open_positions.length) {
+                // process open positions
+                const processed_open_positions = processPositions(open_positions, true, pools);
+                const processed_open_positions2 = processPositions(open_positions, true, pools);
+                // set open positions
+                setOpenPositions(processed_open_positions);
+                setOpenSortedPositions(processed_open_positions2);
+            }
+            // fetch and build closed positions
             const closed_positions = await fetch_and_parse_closed_positions(address, connection, apiKey);
-            setClosedPositions(closed_positions);
+            console.log('setting closed');
+            if (closed_positions.length){
+                // process closed positions
+                const processed_closed_positions = processPositions(closed_positions, false, pools);
+                const processed_closed_positions2 = processPositions(closed_positions, false, pools);
+                // set closed positions
+                setClosedPositions(processed_closed_positions);
+                setClosedSortedPositions(processed_closed_positions2);
+            }
         }
         catch(e) {
             console.log(e);
@@ -97,11 +121,8 @@ export const Dashboard = () => {
         setFetchInterval(inter);
     };
 
-    useEffect(() => {}, [sigLen])
-
     return (
         <div id='tracker'>
-            {/* <p className='white-p'>{`RPC: ${rpc}`}</p> */}
             <form onSubmit={handleSubmitAddress} id='addressForm' className='form'>
                 <label for="addressInput">Position or Solana Wallet 
                     <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >

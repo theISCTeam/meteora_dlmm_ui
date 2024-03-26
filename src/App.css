@@ -276,7 +276,7 @@ tr {
 }
 
 .position{
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .adjustments {
@@ -343,14 +343,15 @@ tr {
     text-align: left;
 }
 
-
 .poolLogo {
     border-radius: 999px;
     height: 30px;
 }
+
 .poolLogos :nth-child(2) {
     transform: translateX(-10px);
 }
+
 .poolLogos {
     display: flex;
     flex-direction: row;
@@ -364,6 +365,7 @@ tr {
     align-items: center;
     gap: 4em;
 }
+
 .loader img {
     height: 125px;
     border: 3px solid skyblue;
@@ -376,11 +378,27 @@ tr {
     border-radius: 999px;
     background-color: gray;
 }
+
 #progress {
     background-color: blue;
     height: 20px;
     width: 20px;
     border-radius: 99px;
+}
+
+.positionHeader {
+    cursor: pointer;
+}
+
+.positionHeader .inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 input:-webkit-autofill,

@@ -133,7 +133,7 @@ function get_range_for_position(tx, program) {
             }
         } 
         catch (e){
-            console.log(e);
+            // console.log(e);
         }
     }
 };
@@ -152,7 +152,7 @@ function get_removed_bps(tx, program) {
             }
         } 
         catch (e){
-            console.log(e);
+            // console.log(e);
         }
     }
 };

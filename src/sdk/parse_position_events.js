@@ -104,8 +104,8 @@ export async function parse_position_events (
                 
                 default:
                     // Unhandled Event
-                    console.log(`Unexpected event: "${event.name}" encountered while parsing position events`);
-                    console.log(event);
+                    // console.log(`Unexpected event: "${event.name}" encountered while parsing position events`);
+                    // console.log(event);
             }
         }
     };

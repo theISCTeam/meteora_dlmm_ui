@@ -128,7 +128,10 @@ export const formatBigNum = (value) => {
     }
 }
 
-export const getPosPoints = (pos, days, binStep) => {
+export const getPosPoints = (pos, open) => {
+    if(!pos.position_adjustments.length){
+        return 0
+    }
     const points_start = 1706659200;
     const events = pos.position_adjustments;
     const { x_price, y_price } = pos;
@@ -175,7 +178,7 @@ export const getPosPoints = (pos, days, binStep) => {
     for (let points_entry of points_arr) {
         points += points_entry;
     }
-    if(!pos.fees_x_unclaimed) {
+    if(!open) {
         return points + getClosedPosFees(pos)*1000; 
     }
     return points + getOpenPosFees(pos)*1000;
