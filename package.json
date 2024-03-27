@@ -4,6 +4,7 @@
     "version": "0.1.0",
     "license": "MIT",
     "private": true,
+    "homepage": "https://theiscteam.github.io/meteora_dlmm_ui/",
     "dependencies": {
         "@coral-xyz/anchor": "^0.29.0",
         "@solana/codecs-data-structures": "^2.0.0-preview.1.20240321043841.125fc1540cfbc0a4afdba5aabac0884c750e58c1",

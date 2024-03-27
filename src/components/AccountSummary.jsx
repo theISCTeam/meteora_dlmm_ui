@@ -96,15 +96,15 @@ export const AccountSummary = () => {
             let elements = [];
             elements.push(
                 <>
-                    <button onClick={() => setDisabledPools([])} >Select All</button>
-                    <button onClick={() => setDisabledPools([...allPools])} >Deselect All</button>
+                    <button className='poolsSelector'onClick={() => setDisabledPools([])} >Select All</button>
+                    <button className='poolsSelector'onClick={() => setDisabledPools([...allPools])} >Deselect All</button>
                 </>
             )
             for(let pool of allPools) {
                 const lbInfo = pools.find(e => e.address === pool);
                 const symbols = lbInfo.name.split('-')
                 elements.push(
-                    <>
+                    <div className="pool">
                     <label for={pool}> 
                         <img className="poolLogo" src={tokens.find(e => e.symbol === symbols[0]).logoURI}></img>
                         <img className="poolLogo" src={tokens.find(e => e.symbol === symbols[1]).logoURI}></img>
@@ -126,7 +126,7 @@ export const AccountSummary = () => {
                             }
                         }} 
                     />
-                    </>
+                    </div>
                 ) 
             }
             setDropdown([...elements]);

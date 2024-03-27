@@ -32,8 +32,8 @@ export const PositionHeaders = ({open}) => {
             else if (direction === 'desc' && activeSort === key) {
                 setActiveSort(undefined);
                 setDirection(undefined);
-                if (open) {setOpenSortedPositions([...openPositions])}
-                else {setClosedSortedPositions([...closedPositions])};
+                if (open) {setOpenSortedPositions([...filter(openPositions)])}
+                else {setClosedSortedPositions([...filter(closedPositions)])};
             }
             else {
                 setActiveSort(key);
@@ -44,8 +44,8 @@ export const PositionHeaders = ({open}) => {
             };
         }
         else {
-            const positions = filter(open ? openPositions : closedPositions);
-            const sorted = sortByKey(positions, activeSort, direction);
+            const rerender_positions = filter(open ? openPositions : closedPositions);
+            const sorted = sortByKey(rerender_positions, activeSort, direction);
             console.log(sorted);
             if (open) {setOpenSortedPositions([...sorted])}
             else {setClosedSortedPositions([...sorted])};

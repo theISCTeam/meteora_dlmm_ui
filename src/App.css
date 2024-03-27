@@ -346,6 +346,7 @@ tr {
 .poolLogo {
     border-radius: 999px;
     height: 30px;
+    border: 1px solid black;
 }
 
 .poolLogos :nth-child(2) {
@@ -369,7 +370,11 @@ tr {
 .loader img {
     height: 125px;
     border: 3px solid skyblue;
-    border-radius: 999px;
+    border-radius: 0px 60px;
+}
+.loader .flipped {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 .loader .progressBar {
@@ -407,4 +412,52 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active  {
   transition: background-color 60000s;
   -webkit-text-fill-color: #fff !important;
+}
+
+
+#poolsDropdown {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-left: 30px;
+    padding-right: 50px;
+    border-radius: 10px;
+}
+
+#poolsDropdown .pool {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+}
+
+#poolsDropdown .pool label :first-child {
+    transform: translateX(10px);
+}
+
+#poolsDropdown .pool label{
+    transform: translateX(10px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#poolsDropdown .pool input{
+    transform: translateX(15px);
+   height: 20px;
+   width: 20px;
+}
+.poolsSelector {
+    cursor: pointer;
+    border-radius: 10px;
+    height: 30px;
+    color: white;
+    border: none;
+    background:  linear-gradient(to top right,#726076 20%, #000042 90%);
+}
+
+.poolsSelector :hover {
+    color: gold;
 }

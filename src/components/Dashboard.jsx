@@ -62,25 +62,21 @@ export const Dashboard = () => {
             // fetch and build open positions
             const open_positions = await fetch_and_parse_open_positions(address, connection, apiKey);
             console.log('setting open');
-            if (open_positions.length) {
-                // process open positions
-                const processed_open_positions = processPositions(open_positions, true, pools);
-                const processed_open_positions2 = processPositions(open_positions, true, pools);
-                // set open positions
-                setOpenPositions(processed_open_positions);
-                setOpenSortedPositions(processed_open_positions2);
-            }
+            // process open positions
+            const processed_open_positions = processPositions(open_positions, true, pools);
+            const processed_open_positions2 = processPositions(open_positions, true, pools);
+            // set open positions
+            setOpenPositions(processed_open_positions);
+            setOpenSortedPositions(processed_open_positions2);
             // fetch and build closed positions
             const closed_positions = await fetch_and_parse_closed_positions(address, connection, apiKey);
             console.log('setting closed');
-            if (closed_positions.length){
-                // process closed positions
-                const processed_closed_positions = processPositions(closed_positions, false, pools);
-                const processed_closed_positions2 = processPositions(closed_positions, false, pools);
-                // set closed positions
-                setClosedPositions(processed_closed_positions);
-                setClosedSortedPositions(processed_closed_positions2);
-            }
+            // process closed positions
+            const processed_closed_positions = processPositions(closed_positions, false, pools);
+            const processed_closed_positions2 = processPositions(closed_positions, false, pools);
+            // set closed positions
+            setClosedPositions(processed_closed_positions);
+            setClosedSortedPositions(processed_closed_positions2);
         }
         catch(e) {
             console.log(e);
