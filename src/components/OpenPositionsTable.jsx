@@ -97,7 +97,12 @@ export const OpenPositionsTable = () => {
                                             base={item.tokenHodl}
                                             important={true}
                                         />
-                                        <td>{formatBigNum(item.points)}</td>
+                                        <td>
+                                            <span> {formatBigNum(item.points.tvl + item.points.fee)}</span>
+                                            <br/>
+                                            <span className="mediumSmolText">TVL: {formatBigNum(item.points.tvl)} </span>  
+                                            | <span className="mediumSmolText">Fees: {formatBigNum(item.points.fee)} </span>  
+                                        </td>
                                     </tr>
                                 </table>
                                 <table className="adjustments" id={`events${item.position.toString()}`}>

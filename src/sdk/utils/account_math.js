@@ -124,7 +124,7 @@ export function summarizeAccount (allPos) {
         dlmm:0, 
         fees:0,
         PnL:0, 
-        points:0,
+        points:{tvl:0, fee:0},
         pools:[]
     };
     
@@ -138,7 +138,8 @@ export function summarizeAccount (allPos) {
         // bins
         summary.noOfBins += pos.range.width;
         // points
-        summary.points += pos.points;
+        summary.points.tvl += pos.points.tvl;
+        summary.points.fee += pos.points.fee;
         // dlmm
         summary.dlmm += pos.lastValue;
         // days

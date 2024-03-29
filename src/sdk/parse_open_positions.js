@@ -24,7 +24,7 @@ export default async function parse_position (
     const parsed_position_data = await get_parsed_events_data(
         position_info.publicKey, program, API_KEY
     );
-    if (parsed_position_data === null) {console.log(position_info.publicKey);return {position:'Error'}};
+    if (parsed_position_data === null) {return {position:'Error'}};
 
     const decimals_x = parsed_position_data.decimals_x;
     const decimals_y = parsed_position_data.decimals_y;

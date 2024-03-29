@@ -1,4 +1,11 @@
+import { placeholder } from "../sdk/utils/position_utils";
+import { PositionHeaders } from "./PositionHeaders";
+import { Adjustments } from "./Adjustments";
 import { GreenRedTd } from "./GreenRedTd";
+import { ExpandBtn } from "./ExpandBtn";
+import { 
+    formatBigNum
+} from "../sdk/utils/position_math";
 import { 
     PoolsContext, 
     PositionsContext 
@@ -8,17 +15,11 @@ import {
     useEffect, 
     useState
 } from "react";
-import { 
-    formatBigNum
-} from "../sdk/utils/position_math";
-import { Adjustments } from "./Adjustments";
-import { PositionHeaders } from "./PositionHeaders";
-import { placeholder } from "../sdk/utils/position_utils";
-import { ExpandBtn } from "./ExpandBtn";
 
 export const ClosedPositionsTable = () => {
     const { closedSortedPositions } = useContext(PositionsContext);
     const {  tokens } = useContext(PoolsContext);
+    
     const [ elements, setElements ] = useState(<></>);
 
     useEffect(() => {
@@ -125,7 +126,12 @@ const closedTd = (item, tokens) => {
                         base={item.tokenHodl} 
                         important={true}
                     />
-                    <td>{formatBigNum(item.points)}</td>
+                    <td>
+                        <span> {formatBigNum(item.points.tvl + item.points.fee)}</span>
+                        <br/>
+                        <span className="mediumSmolText">TVL: {formatBigNum(item.points.tvl)} </span>  
+                        | <span className="mediumSmolText">Fees: {formatBigNum(item.points.fee)} </span>  
+                    </td>
                 </tr>
             </table>
             <table className="adjustments" id={`events${item.position.toString()}`}>

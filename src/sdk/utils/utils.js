@@ -17,18 +17,20 @@ Max retries = 20
 * @return Resolved Promise
 */
 export async function fetch_with_retry (callback, ...params) {
-    const maxRetries = 20;
+    const maxRetries = 5;
     let retries = 0;
-    while(true && retries < maxRetries) {
+    while(retries < maxRetries) {
       try {
         return await callback(...params);
       } catch (e) {
         retries++;
+        console.log(retries);
         console.log(e);
         console.log('waiting 500ms to fetch again function: ' + callback.name);
         await sleep(500)
       }
     }
+    return (new Error('Fetch failed after 5 retries'))
 }
 
 

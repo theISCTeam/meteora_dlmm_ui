@@ -34,7 +34,6 @@ export const getCurrent = (pos) => {
     return (amt_x+amt_y);
 };
 
-
 /** 
 * Returns USD value of final asset dist at last price 
 * @param  {Object} pos Parsed Position
@@ -130,7 +129,7 @@ export const formatBigNum = (value) => {
 
 export const getPosPoints = (pos, open) => {
     if(!pos.position_adjustments.length){
-        return 0
+        return {fee:0, tvl:0}
     }
     const points_start = 1706659200;
     const events = pos.position_adjustments;
@@ -146,9 +145,13 @@ export const getPosPoints = (pos, open) => {
 
     if(pos.days <= 1 || x_prices.length === 1) {
         if(pos.close_time) {
-            return (getUsdAtOpen(pos)*pos.days)+(getClosedPosFees(pos)*1000);
+            let tvl = getUsdAtOpen(pos)*pos.days
+            let fee = getClosedPosFees(pos)*1000
+            return ({tvl:(tvl ? tvl : 0), fee:(fee ? fee : 0)});
         };
-        return (getUsdAtOpen(pos)*pos.days)+(getOpenPosFees(pos)*1000);
+        let tvl = getUsdAtOpen(pos)*pos.days
+        let fee = getOpenPosFees(pos)*1000
+        return ({tvl:(tvl ? tvl : 0), fee:(fee ? fee : 0)});
     };
 
     const points_arr = x_prices.map((entry, i) => {
@@ -179,7 +182,9 @@ export const getPosPoints = (pos, open) => {
         points += points_entry;
     }
     if(!open) {
-        return points + getClosedPosFees(pos)*1000; 
+        let fee = getClosedPosFees(pos)*1000
+        return {tvl:(points ? points : 0), fee: (fee ? fee : 0)}; 
     }
-    return points + getOpenPosFees(pos)*1000;
+    let fee = getOpenPosFees(pos)*1000
+    return {tvl:(points ? points : 0), fee:(fee ? fee : 0)};
 }

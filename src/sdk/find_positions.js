@@ -98,10 +98,10 @@ const get_events_for_transaction = (tx, program) => {
                 const eventData = utils.bytes.base64.encode(ixData.subarray(8));
                 let event = program.coder.events.decode(eventData);
                 if (!event) return 0;
-                if(event.name === 'PositionCreate') {
+                if(event.name && event.name === 'PositionCreate') {
                     event.range = get_range_for_position(tx, program);
                 }
-                if(event.name === 'RemoveLiquidity') {
+                if(event.name && event.name === 'RemoveLiquidity') {
                     event.bps = get_removed_bps(tx, program);
                 }
                 event.blocktime = tx.blockTime;

@@ -13,6 +13,7 @@ import {
 } from './contexts/Contexts';
 import { DEFAULT_RPC, DEFAULT_BIRDEYE_KEY } from './constants';
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
 function App() {
     const [ rpc, setRpc ] = useState(DEFAULT_RPC);
@@ -71,7 +72,7 @@ function App() {
                     <div className="App">
                         <Header/>
                         <Dashboard/>
-                        <footer>Socials</footer>
+                        <Footer/>
                     </div>
                 </PositionsContext.Provider>
             </PoolsContext.Provider>

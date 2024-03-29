@@ -8,7 +8,7 @@ const tooltips = {
     strategy: 'The USD value of your token ratio within the strategy',
     fees: 'The claimed and unclaimed liquidity fees of your position',
     pnl: 'PnL is your Investment Return (Strategy USD value - Initial USD + Fees) ',
-    points: 'Your Estimated MET points (Not including ANY multipliers)'
+    points: 'Your Estimated MET points (Not including ANY multipliers) *This is an estimate and is not indicative of real points or MET token allocation'
 };
 
 export const PositionHeaders = ({open}) => {
@@ -46,14 +46,12 @@ export const PositionHeaders = ({open}) => {
         else {
             const rerender_positions = filter(open ? openPositions : closedPositions);
             const sorted = sortByKey(rerender_positions, activeSort, direction);
-            console.log(sorted);
             if (open) {setOpenSortedPositions([...sorted])}
             else {setClosedSortedPositions([...sorted])};
         }
     };
 
     useEffect(() => {
-        console.log('rerendering');
         handleClick(activeSort, true)
     }, [disabledPools])
 

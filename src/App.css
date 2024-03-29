@@ -157,11 +157,12 @@ header img {
 }
 
 #rpcInput {
-    width: 50ch;
+    width: max-content;max-width: 200px;
 }
 
 #apiInput {
-    width: 36ch;
+    width: max-content;
+    max-width: 200px;
 }
 
 #addressFormWrapper {
@@ -233,6 +234,9 @@ table {
     font-weight: bold;
     border-radius: 15px;
     font-size: 20px;
+    word-break:normal;
+    max-width: 90vw;
+    overflow: scroll;
 }
 
 th {
@@ -376,6 +380,12 @@ tr {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
 }
+.progressArea {
+    width: 50ch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .loader .progressBar {
     height: 20px;
@@ -460,4 +470,29 @@ input:-webkit-autofill:active  {
 
 .poolsSelector :hover {
     color: gold;
+}
+
+
+footer {
+    margin-top: 10vh;
+}
+footer h2{
+    font-size: 25px;
+}
+
+.socialIcons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.socialIcon img {
+    height: 50px;
+}
+
+.greyscale {
+    filter: grayscale(1);
 }

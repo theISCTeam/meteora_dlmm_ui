@@ -22,7 +22,7 @@ const tooltips =  {
     + 'holding your initial tokens amounts without market making. '
     + '* A number over 3 is considered excellent. * A number over 1 is considered acceptable. '
     + '* A number less than 1 is generally evidence of a poor investment.',
-    points: 'Your Estimated MET points (Not including ANY multipliers)'
+    points: 'Your Estimated MET points (Not including ANY multipliers) *This is an estimate and is not indicative of real points or MET token allocation'
 };
   /**
     * A table that summarizes your positions once either open or closed positions are available
@@ -76,7 +76,12 @@ export const AccountSummary = () => {
                             <td>${formatBigNum(dlmm)}</td>
                             <GreenRedTd value={fees} important/>
                             <GreenRedTd value={PnL} withPerc base={deposits} important/>
-                            <td>{formatBigNum(points)}</td>
+                            <td>
+                                <span> {formatBigNum(summary.points.tvl + summary.points.fee)}</span>
+                                <br/>
+                                <span className="mediumSmolText">TVL: {formatBigNum(summary.points.tvl)} </span>  
+                                | <span className="mediumSmolText">fees: {formatBigNum(summary.points.fee)} </span>  
+                            </td>
                         </tr>
                     </>
                 )
@@ -92,7 +97,6 @@ export const AccountSummary = () => {
 
     useEffect(() => {
         if(allPools.length) {
-            console.log(allPools);
             let elements = [];
             elements.push(
                 <>

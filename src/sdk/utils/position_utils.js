@@ -54,6 +54,9 @@ export const processPositions = (positions, open, pools) => {
         let lastValue, fees, lowerBinPrice, upperBinPrice;
         
         const lbInfo = pools.find((e) => e.address === item.lbPair.toString());
+        if(!lbInfo.name) {
+            console.log(lbInfo);
+        }
         const symbols = lbInfo.name.split('-')
         const tokenHodl = getTokenHodl(item);
         const usdHodl = getUsdAtOpen(item);
@@ -95,14 +98,4 @@ export const processPositions = (positions, open, pools) => {
         }
     });
     return processedPositions;
-}
-
-/** 
-Summarizes Account Positions Into An Account Summarys
-* @param {Object[]} openPositions
-* @param {Object[]} closedPositions
-* @returns {{}} Account Summary Object
- */
-export const summarizeAccount = (openPositions, closedPositions) => {
-
 }

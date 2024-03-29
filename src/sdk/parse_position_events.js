@@ -154,6 +154,9 @@ export async function parse_position_events (
             close_time, 
             API_KEY
         );
+        if(!prices.length) {
+            throw new Error('Price Api Cooked')
+        }
     }
 
     const [ xprices, yprices ] = prices
