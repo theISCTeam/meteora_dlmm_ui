@@ -462,6 +462,12 @@ input:-webkit-autofill:active  {
    height: 20px;
    width: 20px;
 }
+#announcement {
+    transition: all 0.5s ease;
+}
+.textWhite {
+    color: white;
+}
 .poolsSelector {
     cursor: pointer;
     border-radius: 10px;

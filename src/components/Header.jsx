@@ -4,7 +4,8 @@ import { ToolTipLow } from './ToolTip';
 import { useContext } from 'react';
 import { 
     DEFAULT_BIRDEYE_KEY, 
-    DEFAULT_RPC 
+    DEFAULT_RPC, 
+    announcements
 } from '../constants';
 
 export const Header = () => {
@@ -14,6 +15,12 @@ export const Header = () => {
         apiKey, 
         setApiKey 
     } = useContext(ConnectionContext);
+
+    function randomAnnouncement () {
+        const len = announcements.length;
+        const index = Math.floor(Math.random()*len)
+        return announcements[index]      
+    }
 
     const handleSubmitRpc = async (e) => {
         e.preventDefault();
@@ -37,6 +44,18 @@ export const Header = () => {
             alert('invalid API key length');
         };
     };
+    window.onload = () => {
+        const element = document.getElementById('announcement');
+        const inter = setInterval(() => {
+            const size = element.style.fontSize;
+            if (size === '40px') {
+                element.style.fontSize = '43px'
+            }
+            else {
+                element.style.fontSize = '40px'
+            }
+        }, 500)
+    }
 
     return (
         <header>
@@ -44,6 +63,7 @@ export const Header = () => {
                 <img src='/meteora_dlmm_ui/logo.png' alt='logo' className='logo'/>
                 <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
+            <h2 id='announcement' className='textWhite'>{randomAnnouncement()}</h2>
             <div className='headerForms'>
                 <form onSubmit={handleSubmitApi} id='apiForm'>
                     <label for="apiInput">
