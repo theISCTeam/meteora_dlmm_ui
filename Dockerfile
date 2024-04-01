@@ -10,4 +10,4 @@ COPY . .
 
 RUN npm run build-docker
 
-CMD npx http-serve ./build -a 0.0.0.0 -p 8082
+CMD npx http-serve ./build -a 0.0.0.0 -p 8082 

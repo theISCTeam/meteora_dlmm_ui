@@ -41,7 +41,7 @@ export const Header = () => {
     return (
         <header>
             <div className='headerBrand'>
-                <img src='./logo.png' alt='logo' className='logo'/>
+                <img src='/meteora_dlmm_ui/logo.png' alt='logo' className='logo'/>
                 <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
             <div className='headerForms'>
