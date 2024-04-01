@@ -15,6 +15,7 @@ import { ExpandBtn } from "./ExpandBtn";
 export const OpenPositionsTable = () => {
     const { openPositions, openSortedPositions } = useContext(PositionsContext);
     const { tokens } = useContext(PoolsContext);
+    
     return (
         <>
             <div className='positionTable'  id='openPositions'>
@@ -25,6 +26,8 @@ export const OpenPositionsTable = () => {
                     {
                         openSortedPositions.length
                         ? openSortedPositions.map(item => {
+                            const logo1 = tokens.find(e => e.symbol === item.symbols[0]);
+                            const logo2 = tokens.find(e => e.symbol === item.symbols[1]);
                             return (<>
                                 <table>
                                     <tr>
@@ -34,8 +37,8 @@ export const OpenPositionsTable = () => {
                                                 target="empty"
                                             >
                                                 <div className="poolLogos">
-                                                    <img className="poolLogo" src={tokens.find(e => e.symbol === item.symbols[0]).logoURI}></img>
-                                                    <img className="poolLogo" src={tokens.find(e => e.symbol === item.symbols[1]).logoURI}></img>
+                                                    <img className="poolLogo" src={logo1 ? logo1.logoURI : './unknownToken.svg'}></img>
+                                                    <img className="poolLogo" src={logo2 ? logo2.logoURI : './unknownToken.svg'}></img>
                                                     {item.lbInfo.name}
                                                 </div>
                                             </a>

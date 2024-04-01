@@ -17,19 +17,13 @@ export default async function parse_position (
     position_info, 
     program, 
     version,
-    API_KEY
+    parsed_position_data,
     ) {
     const lb_pubkey = position_info.account.lbPair;
 
-    const parsed_position_data = await get_parsed_events_data(
-        position_info.publicKey, program, API_KEY
-    );
-    if (parsed_position_data === null) {return {position:'Error'}};
-
+    if (parsed_position_data === null) {return {position:'Error: No event data'}};
     const decimals_x = parsed_position_data.decimals_x;
     const decimals_y = parsed_position_data.decimals_y;
-    const x_price = parsed_position_data.x_price
-    const y_price = parsed_position_data.y_price
     
     const { binStep } = await fetch_with_retry(get_account_info, lb_pubkey, program);
     
@@ -71,7 +65,8 @@ export default async function parse_position (
         days:parsed_position_data.days,
         range: parsed_position_data.range,
         close_time: Math.ceil((parsed_position_data.close_time)),
-        x_price, y_price, 
+        x_mint:parsed_position_data.x_mint,
+        y_mint:parsed_position_data.y_mint,
         decimals_x, decimals_y,
         position_adjustments:parsed_position_data.position_adjustments
     };
@@ -137,7 +132,13 @@ function get_position_current_amount (
         if (bin.version === 1) {
             position_share = new Decimal(liquidity_shares[idx].shln(64).toString());
         } else{
-            position_share = new Decimal(liquidity_shares[idx].toString());
+            try {
+                position_share = new Decimal(liquidity_shares[idx].toString());
+            }
+            catch (e) {
+                position_share = new Decimal(0);
+                console.log(liquidity_shares[idx]);
+            }
         }
 
         const position_x_amount = bin_supply.eq(new Decimal("0"))

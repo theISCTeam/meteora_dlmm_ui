@@ -9,7 +9,8 @@ import {
 import { 
     ConnectionContext, 
     PoolsContext, 
-    PositionsContext 
+    PositionsContext, 
+    PriceContext
 } from './contexts/Contexts';
 import { DEFAULT_RPC, DEFAULT_BIRDEYE_KEY } from './constants';
 import { Header } from './components/Header';
@@ -26,6 +27,8 @@ function App() {
     const [ disabledPools, setDisabledPools ] = useState([]);
     const [ pools, setPools ] = useState([]);
     const [ tokens, setTokens ] = useState([]);
+    const [ usedTokensList, setUsedTokensList ] = [];
+    const [ tokenPrices, setTokenPrices ] = useState({});
 
     useEffect(() => {
         const getPools = async () => {
@@ -39,7 +42,7 @@ function App() {
 
     useEffect(() => {
         // console.log(tokens);
-    }, [pools, tokens])
+    }, [pools, tokens]);
 
     useEffect(() => {
         setConnection(new Connection(rpc));
@@ -69,11 +72,13 @@ function App() {
                     closedSortedPositions,
                     setClosedSortedPositions
                 }}>
-                    <div className="App">
-                        <Header/>
-                        <Dashboard/>
-                        <Footer/>
-                    </div>
+                    <PriceContext.Provider value={{tokenPrices, setTokenPrices}}>
+                        <div className="App">
+                            <Header/>
+                            <Dashboard/>
+                            <Footer/>
+                        </div>
+                    </PriceContext.Provider>
                 </PositionsContext.Provider>
             </PoolsContext.Provider>
         </ConnectionContext.Provider>

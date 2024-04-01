@@ -60,6 +60,5 @@ export const GreenRedTd = (
             :
             <td className={redClasses}>{prefix}{value.toLocaleString()}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
         )
-    }
-
-}
+    };
+};

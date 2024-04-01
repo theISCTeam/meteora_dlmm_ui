@@ -5,3 +5,4 @@ export const PositionsContext = createContext({});
 export const PoolsContext = createContext([]);
 export const TokenContext = createContext([]);
 export const FilterContext = createContext([]);
+export const PriceContext = createContext({});

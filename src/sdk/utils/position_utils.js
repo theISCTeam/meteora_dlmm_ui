@@ -49,53 +49,66 @@ export const placeholder = <tr>
  * @param  {Bool} open Boolean, Are Positions Open?
  * @returns {Object[]} processed Positions Object Array
 */
-export const processPositions = (positions, open, pools) => {
-    let processedPositions = positions.map((item) => {
-        let lastValue, fees, lowerBinPrice, upperBinPrice;
-        
-        const lbInfo = pools.find((e) => e.address === item.lbPair.toString());
-        if(!lbInfo.name) {
-            console.log(lbInfo);
-        }
-        const symbols = lbInfo.name.split('-')
-        const tokenHodl = getTokenHodl(item);
-        const usdHodl = getUsdAtOpen(item);
-        if(open){
-            lastValue = getCurrent(item);
-            fees = getOpenPosFees(item);
-        }
-        else {
-            lastValue = getFinal(item);
-            fees = getClosedPosFees(item);
-        }
-        const PnL =  lastValue - usdHodl + fees;
-        
-        const days = item.days;
-        const points = getPosPoints(item, open);
-        const oDateStr = getIsoStr(new Date(item.open_time*1000));
-        const cDateStr = getIsoStr(new Date(item.close_time*1000));
-        const currentPrice = lbInfo.current_price;
-        
-        if (item.range) {
-            lowerBinPrice = get_price_of_bin(item.range.lowerBinId, lbInfo.bin_step);
-            upperBinPrice = get_price_of_bin(item.range.lowerBinId+item.range.width, lbInfo.bin_step);
-        };
-        return {
-            ...item, 
-            points, 
-            oDateStr, 
-            cDateStr, 
-            currentPrice, 
-            lowerBinPrice, 
-            upperBinPrice, 
-            lbInfo, 
-            symbols, 
-            tokenHodl, 
-            usdHodl, 
-            lastValue, 
-            fees, 
-            PnL
-        }
-    });
-    return processedPositions;
-}
+export const process_positions = (positions, pools) => {
+    let processed_positions = {};
+    for(let key of Object.keys(positions)){
+        let categoryPositions = positions[key];
+        processed_positions[key] = categoryPositions.map((pos) => {
+            let lastValue, fees, lowerBinPrice, upperBinPrice;
+
+            const lbInfo = pools.find((e) => e.address === pos.lbPair.toString());
+
+            if(!lbInfo.name) {
+                console.log(lbInfo);
+            }
+
+            const symbols = lbInfo.name.split('-');
+
+            const usdHodl = getUsdAtOpen(pos);
+            const tokenHodl = getTokenHodl(pos);
+
+            if(key === 'open_positions'){
+                lastValue = getCurrent(pos);
+                fees = getOpenPosFees(pos);
+            }
+            else {
+                lastValue = getFinal(pos);
+                fees = getClosedPosFees(pos);
+            }
+
+            const PnL =  lastValue - usdHodl + fees;
+            const days = pos.days;
+
+            const points = getPosPoints(
+                pos, 
+                key === 'open_positions'
+            );
+            const oDateStr = getIsoStr(new Date(pos.open_time*1000));
+            const cDateStr = getIsoStr(new Date(pos.close_time*1000));
+            const currentPrice = lbInfo.current_price;
+            
+            if (pos.range) {
+                lowerBinPrice = get_price_of_bin(pos.range.lowerBinId, lbInfo.bin_step);
+                upperBinPrice = get_price_of_bin(pos.range.lowerBinId+pos.range.width, lbInfo.bin_step);
+            };
+
+            return {
+                ...pos, 
+                points, 
+                oDateStr, 
+                cDateStr, 
+                currentPrice, 
+                lowerBinPrice, 
+                upperBinPrice, 
+                lbInfo, 
+                symbols, 
+                tokenHodl, 
+                usdHodl, 
+                lastValue, 
+                fees, 
+                PnL
+            };
+        });
+    };
+    return processed_positions;
+};

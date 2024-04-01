@@ -397,8 +397,9 @@ tr {
 #progress {
     background-color: blue;
     height: 20px;
-    width: 20px;
+    width: 15px;
     border-radius: 99px;
+    transition:all 1s ease;
 }
 
 .positionHeader {
@@ -426,17 +427,19 @@ input:-webkit-autofill:active  {
 
 
 #poolsDropdown {
+    max-width: 90vw;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 10px;
+    justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 10px;
     padding-left: 30px;
     padding-right: 50px;
     border-radius: 10px;
 }
 
 #poolsDropdown .pool {
+    max-width: 10vw;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -463,6 +466,8 @@ input:-webkit-autofill:active  {
     cursor: pointer;
     border-radius: 10px;
     height: 30px;
+    width: 5vw;
+    min-width: max-content;
     color: white;
     border: none;
     background:  linear-gradient(to top right,#726076 20%, #000042 90%);

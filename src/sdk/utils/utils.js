@@ -19,18 +19,18 @@ Max retries = 20
 export async function fetch_with_retry (callback, ...params) {
     const maxRetries = 5;
     let retries = 0;
+    let error;
     while(retries < maxRetries) {
       try {
         return await callback(...params);
       } catch (e) {
         retries++;
-        console.log(retries);
-        console.log(e);
+        error = e;
         console.log('waiting 500ms to fetch again function: ' + callback.name);
         await sleep(500)
       }
     }
-    return (new Error('Fetch failed after 5 retries'))
+    return (error)
 }
 
 
@@ -103,6 +103,43 @@ export const get_signatures_for_address = async (pubkey, program) => {
     };
     return signatures;
 };
+/* -------------------------------get_signatures_for_address_before_blocktime --------------------------------------- */
+/** 
+Gets and returns all signatures for an address
+* @param  {PublicKey} pubkey Address as PublicKey
+* @param  {Program} program An initialized Anchor program instance
+* @return {String[]} Array of signatures
+*/
+export const get_signatures_for_address_after_blocktime = async (pubkey, program, earliest_time) => {
+    let len = 1000;
+    let last_sig = undefined;
+    let signatures = [];
+    let last_entry
+    while (len === 1000) {
+        const res = await program.provider.connection.getSignaturesForAddress(pubkey, {before:last_sig});
+
+        len = res.length;
+        last_entry = res[len - 1];
+        last_sig = last_entry.signature;    
+
+        if(earliest_time > last_entry.blockTime) {
+            for(let i in res) {
+                if(res[i].blockTime > earliest_time) {
+                    signatures.push(res[i].signature);
+                }
+                else {
+                    return signatures;
+                }
+            }
+        }
+
+        else {
+            const signatures_only = res.map(e => {return e.signature})
+            signatures = signatures.concat(signatures_only);
+        }
+    };
+    return signatures;
+};
 
 /* ---------------------------------get_multiple_token_prices_history---------------------------------------- */
 /** 
@@ -114,10 +151,16 @@ export async function get_multiple_token_prices_history (mints, blocktime, API_K
     let responses = [];
     for(let mint of mints) {
         const url = `${base_url}?address=${mint}&address_type=token&time_from=${(blocktime - 86400000)}&time_to=${(blocktime + 86400000)}`;
-        const res = await fetch(
-            url, 
-            {headers:headers}
-        );
+        let res;
+        try {
+            const res = await fetch(
+                url, 
+                {headers:headers}
+            );
+        }
+        catch(e) {
+            return new Error(e)
+        }
         
         const data = await res.json();
         responses.push(data.data.items);
@@ -135,7 +178,6 @@ Returns price entries for an array of tokens between start and end timestamps
 * @return {String[]} Array of signatures
 */
 export async function get_multiple_token_prices_history_in_range (mints, start, end, API_KEY) { 
-    // console.log({mints, start, end, API_KEY});
     const base_url = 'https://public-api.birdeye.so/public/history_price';
     const headers = {'X-API-KEY':API_KEY};
     let responses = [];
@@ -145,8 +187,15 @@ export async function get_multiple_token_prices_history_in_range (mints, start, 
             url, 
             {headers:headers}
         );
-        
         const data = await res.json();
+
+        if(data.status === 401) {
+            throw new Error('invalid API key');
+        }
+        if(data.status === 403) {
+            throw new Error('rate limit exceeded, please create your own Birdeye API key');
+        }
+        
         responses.push(data.data.items);
     };
     return responses;

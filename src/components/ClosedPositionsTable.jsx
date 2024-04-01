@@ -19,22 +19,30 @@ import {
 export const ClosedPositionsTable = () => {
     const { closedSortedPositions } = useContext(PositionsContext);
     const {  tokens } = useContext(PoolsContext);
-    
+    const [ page, setPage ] = useState(0);
+    const [ entriesPerPage, setEntriesPerPage ] = useState(5);
     const [ elements, setElements ] = useState(<></>);
 
     useEffect(() => {
         let rows = [];
-        if (closedSortedPositions.length) {  
+        if (closedSortedPositions.length/*  < entriesPerPage */) {  
             for(let e of closedSortedPositions){
                 rows.push(closedTd(e, tokens));
             }
-            setElements([...rows])
+            setPage(0);
+            setElements([...rows]);
         } 
+        // else if (closedSortedPositions.length > entriesPerPage) {
+        //     for(let e of closedSortedPositions.slice(page*entriesPerPage, (page+1)*entriesPerPage)){
+        //         rows.push(closedTd(e, tokens));
+        //     }
+        //     setElements([...rows]);
+        // }
         else { 
             rows = [placeholder] 
             setElements([...rows])
         }
-    }, [closedSortedPositions]);
+    }, [closedSortedPositions, page]);
 
 
     useEffect(() => {} ,[elements])
@@ -48,11 +56,27 @@ export const ClosedPositionsTable = () => {
                 elements
             }
         </div>
+        {/* {
+        closedSortedPositions.length > entriesPerPage
+        ?
+            <div className="pageBtns">
+                <button onClick={() => {if(page>0) {setPage(page-1)}}}>Back</button>
+                Page {page+1}/{Math.ceil(closedSortedPositions.length/20)}
+                <button onClick={() => {
+                    if(page+1 < Math.ceil(closedSortedPositions.length/20)) {
+                        setPage(page+1)
+                    } 
+                }}>Forward</button>
+            </div>
+        : <></>
+        } */}
     </>)
 };
 
 
 const closedTd = (item, tokens) => {  
+    const logo1 = tokens.find(e => e.symbol === item.symbols[0]);
+    const logo2 = tokens.find(e => e.symbol === item.symbols[1]);
     return (
         <>
             <table>                     
@@ -63,8 +87,8 @@ const closedTd = (item, tokens) => {
                             target="empty"
                         >
                             <div className="poolLogos">
-                                <img className="poolLogo" src={tokens.find(e => e.symbol === item.symbols[0]).logoURI}></img>
-                                <img className="poolLogo" src={tokens.find(e => e.symbol === item.symbols[1]).logoURI}></img>
+                                <img className="poolLogo" src={logo1 ? logo1.logoURI : './unknownToken.svg'}></img>
+                                <img className="poolLogo" src={logo2 ? logo2.logoURI : './unknownToken.svg'}></img>
                                 {item.lbInfo.name}
                             </div>
                         </a>

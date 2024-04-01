@@ -1,4 +1,4 @@
-import { get_price_of_bin } from "./bin_math";
+import { find_nearest_price_to_time } from "../parse_position_events";
 
 /** 
 *  Returns USD value of position at Open
@@ -6,8 +6,10 @@ import { get_price_of_bin } from "./bin_math";
    * @return value as Number
 */
 export const getUsdAtOpen = (pos) => {
-    const amt_x = ((pos.initial_x / 10**pos.decimals_x)*pos.x_price.open);
-    const amt_y = ((pos.initial_y / 10**pos.decimals_y)*pos.y_price.open);
+    const price_x = find_nearest_price_to_time(pos.x_prices, pos.open_time);
+    const price_y = find_nearest_price_to_time(pos.y_prices, pos.open_time);
+    const amt_x = ((pos.initial_x / 10**pos.decimals_x)*price_x.value);
+    const amt_y = ((pos.initial_y / 10**pos.decimals_y)*price_y.value);
     return (amt_x+amt_y);
 };
 
@@ -17,8 +19,10 @@ export const getUsdAtOpen = (pos) => {
    * @return value as Number
 */
 export const getTokenHodl = (pos) => {
-    const amt_x = ((pos.initial_x / 10**pos.decimals_x)*pos.x_price.last);
-    const amt_y = ((pos.initial_y / 10**pos.decimals_y)*pos.y_price.last);
+    const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
+    const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
+    const amt_x = ((pos.initial_x / 10**pos.decimals_x)*price_x.value);
+    const amt_y = ((pos.initial_y / 10**pos.decimals_y)*price_y.value);
     return (amt_x+amt_y);
 };
 
@@ -28,9 +32,10 @@ export const getTokenHodl = (pos) => {
 * @return value as Number
 */
 export const getCurrent = (pos) => {
-    // console.log(pos);
-    const amt_x = (((Number(pos.current_x)+Number(pos.withdrawn_x)) / (10**pos.decimals_x))*pos.x_price.last);
-    const amt_y = (((Number(pos.current_y)+Number(pos.withdrawn_y)) / (10**pos.decimals_y))*pos.y_price.last);
+    const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
+    const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
+    const amt_x = (((Number(pos.current_x)+Number(pos.withdrawn_x)) / (10**pos.decimals_x))*price_x.value);
+    const amt_y = (((Number(pos.current_y)+Number(pos.withdrawn_y)) / (10**pos.decimals_y))*price_y.value);
     return (amt_x+amt_y);
 };
 
@@ -40,8 +45,10 @@ export const getCurrent = (pos) => {
 * @return value as Number
 */
 export const getFinal = (pos) => {
-    const amt_x = ((pos.final_x / 10**pos.decimals_x)*pos.x_price.last);
-    const amt_y = ((pos.final_y / 10**pos.decimals_y)*pos.y_price.last);
+    const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
+    const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
+    const amt_x = ((pos.final_x / 10**pos.decimals_x)*price_x.value);
+    const amt_y = ((pos.final_y / 10**pos.decimals_y)*price_y.value);
     return (amt_x+amt_y);
 };
 
@@ -51,8 +58,10 @@ Returns USD value of claimed and unclaimed accumulated fees at current price
 * @return value as Number
 */
 export const getOpenPosFees = (pos) => {
-    const amt_x = ((pos.fees_x_claimed+ pos.fees_x_unclaimed)*pos.x_price.last)/10**pos.decimals_x;
-    const amt_y = ((pos.fees_y_claimed+ pos.fees_y_unclaimed)*pos.y_price.last)/10**pos.decimals_y;
+    const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
+    const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
+    const amt_x = ((pos.fees_x_claimed + pos.fees_x_unclaimed)*price_x.value)/10**pos.decimals_x;
+    const amt_y = ((pos.fees_y_claimed + pos.fees_y_unclaimed)*price_y.value)/10**pos.decimals_y;
     return (amt_x+amt_y);
 };
 
@@ -62,8 +71,10 @@ Returns USD value of accumulated fees at last price
 * @return value as Number
 */
 export const getClosedPosFees = (pos) => {
-    const amt_x = ((pos.fees_x / 10**pos.decimals_x)*pos.x_price.last);
-    const amt_y = ((pos.fees_y / 10**pos.decimals_y)*pos.y_price.last);
+    const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
+    const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
+    const amt_x = ((pos.fees_x / 10**pos.decimals_x)*price_x.value);
+    const amt_y = ((pos.fees_y / 10**pos.decimals_y)*price_y.value);
     return Number((amt_x+amt_y));
 };
 
@@ -131,18 +142,18 @@ export const getPosPoints = (pos, open) => {
     if(!pos.position_adjustments.length){
         return {fee:0, tvl:0}
     }
-    const points_start = 1706659200;
     const events = pos.position_adjustments;
-    const { x_price, y_price } = pos;
-    const x_prices = x_price.all;
-    const y_prices = y_price.all;
-
-    let current_event = events[0];
     const max_events = events.length - 1;
-    let eventIndex = 0;
+    
+    const { x_prices, y_prices } = pos;
+    
+    let current_event = events[0];
     let amt_x = current_event.x_amount;
     let amt_y = current_event.y_amount;
-
+    
+    const points_start = 1706659200; // 2024-01-31
+    let eventIndex = 0;
+    
     if(pos.days <= 1 || x_prices.length === 1) {
         if(pos.close_time) {
             let tvl = getUsdAtOpen(pos)*pos.days
@@ -155,9 +166,12 @@ export const getPosPoints = (pos, open) => {
     };
 
     const points_arr = x_prices.map((entry, i) => {
-        if(entry.unixTime < points_start) {
-            return 0;
-        }
+        if(
+               points_start   > entry.unixTime
+            || pos.open_time  > entry.unixTime  
+            || entry.unixTime > pos.close_time
+        ) { return 0 }
+        
         if(eventIndex + 1 <= max_events && entry.unixTime > events[eventIndex+1].time) {
             eventIndex++;
             current_event = events[eventIndex];  

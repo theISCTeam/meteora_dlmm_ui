@@ -106,12 +106,14 @@ export const AccountSummary = () => {
             )
             for(let pool of allPools) {
                 const lbInfo = pools.find(e => e.address === pool);
-                const symbols = lbInfo.name.split('-')
+                const symbols = lbInfo.name.split('-');
+                const logo1 = tokens.find(e => e.symbol === symbols[0])
+                const logo2 = tokens.find(e => e.symbol === symbols[1])
                 elements.push(
                     <div className="pool">
                     <label for={pool}> 
-                        <img className="poolLogo" src={tokens.find(e => e.symbol === symbols[0]).logoURI}></img>
-                        <img className="poolLogo" src={tokens.find(e => e.symbol === symbols[1]).logoURI}></img>
+                        <img className="poolLogo" src={logo1 ? logo1.logoURI : './unknownToken.svg'}></img>
+                        <img className="poolLogo" src={logo2 ? logo2.logoURI : './unknownToken.svg'}></img>
                         <span className="mediumText">{lbInfo.name}</span>
                     </label>
                     <input 

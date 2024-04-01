@@ -67,7 +67,7 @@ export const Header = () => {
                                 <ToolTipLow tooltip={
                                     'There Is a Default API key, this is a shared '
                                     + 'resource and is subject to significant '
-                                    + 'load at times which may cause slow loading.'
+                                    + 'load at times which may cause slow or failed loading.'
                                 }/>
                             </> 
                             : "Custom API Key Connected"}
@@ -95,7 +95,7 @@ export const Header = () => {
                                 <ToolTipLow tooltip={
                                     'There is a Default RPC, this is a shared resource '
                                     + 'and is subject to significant load at times '
-                                    + 'which may cause slow loading times.'
+                                    + 'which may cause slow or failed loading.'
                                 }/>
                             </> 
                             : "Custom RPC connected"

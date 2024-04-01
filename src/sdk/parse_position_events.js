@@ -18,8 +18,7 @@ import {
 */
 export async function parse_position_events (
     position_transactions, 
-    program,
-    API_KEY
+    program
     ) {
     let position = '' // Address
     let lbPair = ''  // Address
@@ -135,31 +134,36 @@ export async function parse_position_events (
         tokenYMint, 
         program
     );
+    
+    let days = (close_time - open_time)/86400;
+    // let prices = [];
+    // if(days < 1) {
+    //     prices = await fetch_with_retry(
+    //         get_multiple_token_prices_history_in_range, 
+    //         [tokenXMint, tokenYMint], 
+    //         open_time, 
+    //         open_time + 86400,
+    //         API_KEY
+    //     );
+    // }
+    // else {
+    //     prices = await fetch_with_retry(
+    //         get_multiple_token_prices_history_in_range, 
+    //         [tokenXMint, tokenYMint], 
+    //         open_time, 
+    //         close_time, 
+    //         API_KEY
+    //     );
+    //     if(!prices.length) {
+    //         throw new Error('Price Api Is Cooked');
+    //     };
+    // };
 
-    let prices = [];
-    let days = (close_time - open_time)/86400
-    if(days < 1) {
-        prices = await fetch_with_retry(
-            get_multiple_token_prices_history, 
-            [tokenXMint, tokenYMint], 
-            open_time, 
-            API_KEY
-        );
-    }
-    else {
-        prices = await fetch_with_retry(
-            get_multiple_token_prices_history_in_range, 
-            [tokenXMint, tokenYMint], 
-            open_time, 
-            close_time, 
-            API_KEY
-        );
-        if(!prices.length) {
-            throw new Error('Price Api Cooked')
-        }
-    }
 
-    const [ xprices, yprices ] = prices
+
+
+
+/*     const [ xprices, yprices ] = prices;
     const xopen = xprices[0].value;
     const yopen = yprices[0].value;
     const xclose = xprices[xprices.length -1].value;
@@ -171,7 +175,7 @@ export async function parse_position_events (
         position_adjustments[i].yprice = findNearestPriceToTime(yprices, time);
     }
     
-    position_adjustments = position_adjustments.reverse()
+    position_adjustments = position_adjustments.reverse() */
     
     return {
         position,
@@ -187,9 +191,10 @@ export async function parse_position_events (
         close_time,
         decimals_x,
         decimals_y,
+        x_mint : tokenXMint, y_mint: tokenYMint,
         range,
-        x_price : {open: xopen, last:xclose, all:xprices},
-        y_price : {open: yopen, last:yclose, all:yprices},
+        // x_price : {open: xopen, last:xclose, all:xprices},
+        // y_price : {open: yopen, last:yclose, all:yprices},
         position_adjustments
     };
 };  
@@ -200,7 +205,7 @@ export async function parse_position_events (
  * @param  {any} time timestamp
  * @return {Object} Returns an Object containing 2 Object arrays of Positions
 */
-const findNearestPriceToTime = (prices, time) => {
+export const find_nearest_price_to_time = (prices, time) => {
     for(let i in prices) {
         if(!prices[i+1]) {return prices[i]}
         else if(prices[i].time <= time && prices[i+0] >= time) {
@@ -220,7 +225,6 @@ const findNearestPriceToTime = (prices, time) => {
 export const parse_closed_positions = async (
     positions, 
     program, 
-    API_KEY
     ) => {
     let parsed_positions = [];
     for(let key in positions) {
@@ -228,7 +232,6 @@ export const parse_closed_positions = async (
             await parse_position_events(
                 positions[key], 
                 program, 
-                API_KEY
             )
         );
     };

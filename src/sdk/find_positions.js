@@ -3,7 +3,6 @@ import parse_position  from "./parse_open_positions";
 import { BorshCoder, Program, utils } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import { PublicKey, TransactionResponse } from "@solana/web3.js";
-import idl from '../sdk/constants/meteora_dlmm_idl.json'
 
 /**
  * Returns object array of position addresses with events
@@ -11,21 +10,18 @@ import idl from '../sdk/constants/meteora_dlmm_idl.json'
  * @param  {Program} program Anchor Program Instance
  * @return {Object[]} Returns a parsed Object array of  positions
  */
-export async function find_positions_with_events (pubkey, program) {
-    const signatures = await fetch_with_retry(get_signatures_for_address, pubkey, program);
-    return fetch_and_sort_transactions_into_positions(signatures, program);
+export async function find_positions_with_events (transactions, program) {
+    return sort_transaction_array_into_positions_with_events(transactions, program);
 }
 
-
 /**
  * Returns object array of position addresses with events
  * @param  {String} pubkey Address to search positions for
  * @param  {Program} program Anchor Program Instance
  * @return {Object[]} Returns a parsed Object array of  positions
  */
-const fetch_and_sort_transactions_into_positions = async (signatures, program) => {
-    if (!signatures.length) {throw new Error('Signatures are not an array')};
-    let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
+const fetch_and_sort_transactions_into_positions = async (transactions, program) => {
+    if (!transactions.length) {throw new Error('Signatures are not an array')};
     return sort_transaction_array_into_positions_with_events(transactions, program);
 }
 /**
@@ -34,7 +30,8 @@ const fetch_and_sort_transactions_into_positions = async (signatures, program) =
  * @param  {Program} program Anchor Program Instance
  * @return {Object[]} Returns an Object array of Transactions
  */
-const fetch_parsed_transactions_from_signature_array = async (signatures, program) => {
+
+export const fetch_parsed_transactions_from_signature_array = async (signatures, program) => {
     let parsed_transactions = [];
     let promises = []
     for(let i = 0; i < signatures.length; i+=1000) {
@@ -59,18 +56,22 @@ const sort_transaction_array_into_positions_with_events = async (transactions, p
     let all_positions = {}; 
     for(let tx of transactions) {
         let events = get_events_for_transaction(tx, program);
-        // console.log(events);
         if (events.length !== 0 && events[0].name !== 'Swap') {
             let position = '';
-            if (events[0].name === 'CompositionFee') {
-                position = events[1].data.position;
+            try {
+                if (events[0].name === 'CompositionFee') {
+                    position = events[1].data.position;
+                }
+                else {position = events[0].data.position};
+                
+                if (all_positions[position.toString()] === undefined) {
+                    all_positions[position.toString()] = [events];
+                }
+                else {all_positions[position.toString()].push(events)};
             }
-            else {position = events[0].data.position};
-
-            if (all_positions[position.toString()] === undefined) {
-                all_positions[position.toString()] = [events];
+            catch {
+                console.log(`Skipped event ${events[0].name}`); // Example : lbpaircreate
             }
-            else {all_positions[position.toString()].push(events)};
         }
     
     }
@@ -183,7 +184,7 @@ const sort_positions = (positions) => {
  * @param  {string} transactions Birdeye API key
  * @return {Object} Returns an Object containing 2 Object arrays of Open Positions
 */
-export async function find_account_open_positions (user_pubkey, program, API_KEY) {
+export async function find_account_open_positions (user_pubkey, program, parsed_position_events) {
     const position_accounts = await program.account.position.all([
         {
             memcmp: {
@@ -204,12 +205,14 @@ export async function find_account_open_positions (user_pubkey, program, API_KEY
 
     let promisesV1 = [];
     for(let p of position_accounts) {
-        promisesV1.push(parse_position(p, program, 1, API_KEY));
+        const position_event_data = parsed_position_events.find(e => e.position === p.toString())
+        promisesV1.push(parse_position(p, program, 1, position_event_data));
     };
 
     let promisesV2 = [];
     for(let p of v2_positions_accounts) {
-        promisesV2.push(parse_position(p, program, 2, API_KEY));
+        const position_event_data = parsed_position_events.find(e => e.position.toString() === p.publicKey.toString())
+        promisesV2.push(parse_position(p, program, 2, position_event_data));
     };
 
     const positionsV1 = await Promise.all(promisesV1);

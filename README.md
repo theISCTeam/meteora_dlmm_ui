@@ -28,9 +28,12 @@ docker compose up --build
 
 
 ## Usage
-### The UI comes pre-loaded with a default API key and RPC URL but these are shared resources and may be deprecated so it would be wise to create your own ones.
+### The UI comes pre-loaded with a default API key and RPC URL but these are shared resources and may be exhausted or deprecated so it would be wise to create your own ones.
 
-It's easy to get a Birdeye API key and the free tier is sufficient for this application. For your private RPC, Alchemy's free tier RPC is fine as well.
+It's easy to get a Birdeye API key and the free tier is sufficient for this application. 
+
+For your private RPC, Alchemy's free tier RPC works well.
+Get one at https://www.alchemy.com/ 
 
 Replace the keys in /src/constants.js or input them into the header of the UI.
 
