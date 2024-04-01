@@ -463,6 +463,7 @@ input:-webkit-autofill:active  {
    width: 20px;
 }
 #announcement {
+    font-size: 30px;
     transition: all 0.5s ease;
 }
 .textWhite {

@@ -3,7 +3,7 @@ export const DEFAULT_RPC = 'https://solana-mainnet.g.alchemy.com/v2/l9I0X_tzbyGG
 
 export const announcements = [
     'Now With More Cats!',
-    'Now With Sponsored RPC!',
+    // 'Now With Sponsored RPC!',
     'Unlimited Power!',
     'The Dev Has a Hat!',
     'MET Wif Points!',
@@ -13,5 +13,6 @@ export const announcements = [
     'Harder, Better, Faster, Stronger',
     'For The Curve!',
     '27 y.o. intern!',
-    'Printing LP like a record label!'
+    'Printing LP like a record label!',
+    "Sssmokin'!"
 ];

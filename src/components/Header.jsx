@@ -1,7 +1,7 @@
 import { ConnectionContext } from '../contexts/Contexts';
 import { Connection } from '@solana/web3.js';
 import { ToolTipLow } from './ToolTip';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { 
     DEFAULT_BIRDEYE_KEY, 
     DEFAULT_RPC, 
@@ -15,12 +15,14 @@ export const Header = () => {
         apiKey, 
         setApiKey 
     } = useContext(ConnectionContext);
-
     function randomAnnouncement () {
         const len = announcements.length;
         const index = Math.floor(Math.random()*len)
         return announcements[index]      
     }
+
+    const [announcement, setAnnouncement] = useState(randomAnnouncement())
+
 
     const handleSubmitRpc = async (e) => {
         e.preventDefault();
@@ -63,7 +65,7 @@ export const Header = () => {
                 <img src='/meteora_dlmm_ui/logo.png' alt='logo' className='logo'/>
                 <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
-            <h2 id='announcement' className='textWhite'>{randomAnnouncement()}</h2>
+            <h2 id='announcement' className='textWhite pointer' onClick={() => {setAnnouncement(randomAnnouncement())}}>{announcement}</h2>
             <div className='headerForms'>
                 <form onSubmit={handleSubmitApi} id='apiForm'>
                     <label for="apiInput">
