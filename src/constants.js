@@ -12,7 +12,7 @@ export const announcements = [
     'Have You Met @YouKnowEno?',
     'Harder, Better, Faster, Stronger',
     'For The Curve!',
-    '27 y.o. intern!',
+    // '27 y.o. intern!',
     'Printing LP like a record label!',
     "Sssmokin'!"
 ];
