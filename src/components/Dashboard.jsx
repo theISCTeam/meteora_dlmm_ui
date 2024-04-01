@@ -157,11 +157,6 @@ export const Dashboard = () => {
                     return alert('RPC Error: Failed to load signatures');
                 }
             }
-            if(signatures.length > max_sigs && DEFAULT_RPC === rpc) {
-                alert('This address has over 2000 transactions, please use a private RPC');
-                resetLoader(dots);
-                return;
-            };
             setLoadingInfo({step:2, maxSteps, text:`Collecting ${signatures.length} Transactions...`});
             // fetch transactions and update loader txt each cycle 
             let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
