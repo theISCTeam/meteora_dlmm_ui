@@ -234,7 +234,7 @@ export const Dashboard = () => {
     return (
         <div id='tracker'>
             <form onSubmit={handleSubmitAddress} id='addressForm' className='form'>
-                <label for="addressInput">Position or Solana Wallet 
+                <label for="addressInput">Solana Address 
                     <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >
                 </label>
                 <br/>
