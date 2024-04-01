@@ -112,8 +112,8 @@ export const AccountSummary = () => {
                 elements.push(
                     <div className="pool">
                     <label for={pool}> 
-                        <img className="poolLogo" src={logo1 ? logo1.logoURI : './unknownToken.svg'}></img>
-                        <img className="poolLogo" src={logo2 ? logo2.logoURI : './unknownToken.svg'}></img>
+                        <img className="poolLogo" src={logo1 ? logo1.logoURI : '/meteora_dlmm_ui/unknownToken.svg'}></img>
+                        <img className="poolLogo" src={logo2 ? logo2.logoURI : '/meteora_dlmm_ui/unknownToken.svg'}></img>
                         <span className="mediumText">{lbInfo.name}</span>
                     </label>
                     <input 
@@ -146,7 +146,7 @@ export const AccountSummary = () => {
         <>
             <div className='positionTable' id='closedPositions'>
                 <h2>Account Performance 
-                    <img className="pointer" onClick={togglePoolsDropdown} src="./filter.svg"/>
+                    <img className="pointer" onClick={togglePoolsDropdown} src="/meteora_dlmm_ui/filter.svg"/>
                     <div id="poolsDropdown"> 
                         {dropdown}
                     </div>

@@ -3,7 +3,7 @@ export const ToolTip = (params) => {
     return (
         <div className="tooltip">
             <p className="tooltip-text">{tooltip}</p>
-            <img src="info.png" className="info-icon" alt="."/>
+            <img src="/meteora_dlmm_ui/info.png" className="info-icon" alt="."/>
         </div>
     )
 }
@@ -13,7 +13,7 @@ export const ToolTipLow = (params) => {
     return (
         <div className="tooltip">
             <p className="tooltip-text-low">{tooltip}</p>
-            <img src="info.png" className="info-icon" alt="."/>
+            <img src="/meteora_dlmm_ui/info.png" className="info-icon" alt="."/>
         </div>
     )
 }

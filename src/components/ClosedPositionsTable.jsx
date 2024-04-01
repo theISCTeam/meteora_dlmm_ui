@@ -87,8 +87,8 @@ const closedTd = (item, tokens) => {
                             target="empty"
                         >
                             <div className="poolLogos">
-                                <img className="poolLogo" src={logo1 ? logo1.logoURI : './unknownToken.svg'}></img>
-                                <img className="poolLogo" src={logo2 ? logo2.logoURI : './unknownToken.svg'}></img>
+                                <img className="poolLogo" src={logo1 ? logo1.logoURI : '/meteora_dlmm_ui/unknownToken.svg'}></img>
+                                <img className="poolLogo" src={logo2 ? logo2.logoURI : '/meteora_dlmm_ui/unknownToken.svg'}></img>
                                 {item.lbInfo.name}
                             </div>
                         </a>

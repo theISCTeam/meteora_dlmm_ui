@@ -90,8 +90,8 @@ export const PositionHeaders = ({open}) => {
             <div>
                 {
                 activeSort === objKey
-                    ? <img src={`./${direction}.svg`}/>
-                    : <img src={`defaultSort.svg`}/>
+                    ? <img src={`/meteora_dlmm_ui/${direction}.svg`}/>
+                    : <img src={`/meteora_dlmm_ui/defaultSort.svg`}/>
                 }
             </div>
         )

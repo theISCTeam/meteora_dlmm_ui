@@ -15,14 +15,14 @@ export const Loader = ({info}) => {
 
     return (
         <div className="loader">
-            <img className="flipped"src="./loader.gif"/>
+            <img className="flipped" src="/meteora_dlmm_ui/loader.gif"/>
             <div className="progressArea">
                 <h1 id="loaderh1">{text}</h1>
                 <div className="progressBar" id="progressBar">
                     <div id="progress"></div>
                 </div>
             </div>
-            <img src="./loader.gif"/>
+            <img src="/meteora_dlmm_ui/loader.gif"/>
         </div>
     )
 }
