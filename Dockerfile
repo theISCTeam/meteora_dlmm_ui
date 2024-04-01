@@ -10,4 +10,4 @@ COPY ./config-overrides.js .
 RUN npm install
 RUN npm run build
 
-CMD npx http-serve ./app/build -a 0.0.0.0 -p 8082
+CMD npx http-serve ./build -a 0.0.0.0 -p 8082
