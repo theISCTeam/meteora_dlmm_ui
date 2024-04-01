@@ -48,11 +48,11 @@ export const Header = () => {
         const element = document.getElementById('announcement');
         const inter = setInterval(() => {
             const size = element.style.fontSize;
-            if (size === '40px') {
-                element.style.fontSize = '43px'
+            if (size === '30px') {
+                element.style.fontSize = '33px'
             }
             else {
-                element.style.fontSize = '40px'
+                element.style.fontSize = '30px'
             }
         }, 500)
     }
