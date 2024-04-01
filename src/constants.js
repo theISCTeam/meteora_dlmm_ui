@@ -8,7 +8,7 @@ export const announcements = [
     'The Dev Has a Hat!',
     'MET Wif Points!',
     'May The Curve Be With You!',
-    'What the FAQ?',
+    // 'What the FAQ?',
     'Have You Met @YouKnowEno?',
     'Harder, Better, Faster, Stronger',
     'For The Curve!',
