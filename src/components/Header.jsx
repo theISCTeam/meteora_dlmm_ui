@@ -65,8 +65,8 @@ export const Header = () => {
                 <img src='/meteora_dlmm_ui/logo.png' alt='logo' className='logo'/>
                 <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
-            <h2 id='announcement' className='textWhite pointer' onClick={() => {setAnnouncement(randomAnnouncement())}}>{announcement}</h2>
-            <div className='headerForms'>
+                <h2 id='announcement' className='textWhite pointer' onClick={() => {setAnnouncement(randomAnnouncement())}}>{announcement}</h2>
+            {/* <div className='headerForms'>
                 <form onSubmit={handleSubmitApi} id='apiForm'>
                     <label for="apiInput">
                         Birdeye.so API key (Free Tier Is Enough)
@@ -124,7 +124,7 @@ export const Header = () => {
                         }
                     </label>
                 </form>
-            </div>
+            </div> */}
         </header>
     )
 }

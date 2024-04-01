@@ -6,8 +6,7 @@
 }
 
 h1 {
-    margin-left: 10px;
-    font-size: 25px;
+    font-size: 1em
 }
 
 h2 {
@@ -97,28 +96,32 @@ h2 {
 }
 
 header {
+    position: relative;
     background: linear-gradient(to top right,#36243B 30%, #000042 90%);
     color: white;
     width: 100vw;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
     gap: 30px;
     min-height: 200px;
     padding-bottom: 20px;
 }
-
+#announcement {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.5em;
+    transition: all 0.5s ease;
+}
 header img {
     height:75px;
 }
 
 .headerBrand {
-    padding-left: 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 50px;
 }
 
 .headerForms {
@@ -168,6 +171,7 @@ header img {
 #addressFormWrapper {
     background: linear-gradient(to top right,#4a3450 50%, #000042 );
     border-radius: 0px 25px 0px 25px;
+    max-width: 75vw;
 }
 
 #addressForm label {
@@ -180,6 +184,7 @@ header img {
     font-size: 20px;
     padding: 6px;
     border-radius: 0px 25px 0px 0px;
+    max-width: 30vw;
 }
 
 #addressInput {
@@ -188,6 +193,8 @@ header img {
     width: 500px;
     padding: 6px;
     font-size: 20px;
+    max-width: 40vw;
+
 }
 
 form {
@@ -242,10 +249,11 @@ table {
 th {
     background-color: #f1efef93;
     height: 60px;
+    width: 8vw;
 }
 
 td, th {
-    width: 8vw;
+    max-width: 8vw;
     border: 1px solid rgb(206, 206, 206);
     border-right: none;
     padding: 8px;
@@ -462,10 +470,7 @@ input:-webkit-autofill:active  {
    height: 20px;
    width: 20px;
 }
-#announcement {
-    font-size: 30px;
-    transition: all 0.5s ease;
-}
+
 .textWhite {
     color: white;
 }

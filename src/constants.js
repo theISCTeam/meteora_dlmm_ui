@@ -3,16 +3,26 @@ export const DEFAULT_RPC = 'https://solana-mainnet.g.alchemy.com/v2/l9I0X_tzbyGG
 
 export const announcements = [
     'Now With More Cats!',
-    // 'Now With Sponsored RPC!',
     'Unlimited Power!',
-    'The Dev Has a Hat!',
+    'The Dev Has Hat!',
     'MET Wif Points!',
     'May The Curve Be With You!',
-    // 'What the FAQ?',
     'Have You Met @YouKnowEno?',
     'Harder, Better, Faster, Stronger',
     'For The Curve!',
-    // '27 y.o. intern!',
     'Printing LP like a record label!',
-    "Sssmokin'!"
+    "Sssmokin'!",
+    'Allowed Into Berghain!',
+    'Decentralized!',
+    'Powered By Kittens!',
+    'Going To Zerø!',
+    'LP cadets, assemble!',
+    'As seen on MET townhall!',
+    'Not Financial Advice!',
+    'Click me!',
+    'The Dash is DED',
+    'Let Ben Cook!',
+    'The Team Is Based!',
+    'ISC > USD',
+    'Loved By Soylana Manlets'
 ];
