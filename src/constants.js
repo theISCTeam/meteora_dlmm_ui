@@ -27,6 +27,5 @@ export const announcements = [
     'Loved By Soylana Manlets',
     'The Cat Is Cute',
     'Accepts Tips In Catnip',
-    'Absolute Monkey Business',
-    'Sending tips to andzi.sol will incur purchase of coffee'
+    'Absolute Monkey Business'
 ];
