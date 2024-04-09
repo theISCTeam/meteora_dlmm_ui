@@ -26,7 +26,7 @@ export async function fetch_with_retry (callback, ...params) {
       } catch (e) {
         retries++;
         error = e;
-        console.log('waiting 500ms to fetch again function: ' + callback.name);
+        console.log('waiting 500ms to fetch again function: ' + callback.name + e);
         await sleep(500)
       }
     }

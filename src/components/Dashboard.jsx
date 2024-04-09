@@ -151,9 +151,6 @@ export const Dashboard = () => {
                 resetLoader(dots);
                 if (!Object.keys(positions)) {
                     resetLoader(dots)
-                    if (DEFAULT_RPC === rpc) {
-                        return alert('RPC Error: failed to load signatures, please retry with a private RPC');
-                    }
                     return alert('RPC Error: Failed to load signatures');
                 }
             }
@@ -162,9 +159,6 @@ export const Dashboard = () => {
             let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
             if(!transactions.length) {
                 resetLoader(dots);
-                if (DEFAULT_RPC === rpc) {
-                    return alert('RPC Error: Failed to get Transactions, please retry with a private RPC');
-                }
                 return alert('RPC Error: Failed to get Transactions');
             }
             // Update loader to compiling positions
@@ -172,9 +166,6 @@ export const Dashboard = () => {
             const positions = await fetch_and_parse_positions_for_account(address, transactions, connection);
             if (!Object.keys(positions)) {
                 resetLoader(dots)
-                if (DEFAULT_RPC === rpc) {
-                    return alert('RPC Error: Failed to parse positions, please retry with a private RPC')
-                }
                 return alert('RPC Error: Failed to parse positions');
             }
             // update loader to getting prices and processing positions

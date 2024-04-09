@@ -1,5 +1,5 @@
 export const DEFAULT_BIRDEYE_KEY = 'dd0abee4829046c49d1052b3a78d6afd'
-export const DEFAULT_RPC = 'https://solana-mainnet.g.alchemy.com/v2/l9I0X_tzbyGGHx0mqdB4yf8kB8avaCVV'
+export const DEFAULT_RPC = 'https://mainnet.helius-rpc.com/?api-key=648bd1c2-cb78-433a-9fbc-178afdc93f9b'
 
 export const announcements = [
     'Now With More Cats!',
@@ -24,5 +24,9 @@ export const announcements = [
     'Let Ben Cook!',
     'The Team Is Based!',
     'ISC > USD',
-    'Loved By Soylana Manlets'
+    'Loved By Soylana Manlets',
+    'The Cat Is Cute',
+    'Accepts Tips In Catnip',
+    'Absolute Monkey Business',
+    'Sending tips to andzi.sol will incur purchase of coffee'
 ];
