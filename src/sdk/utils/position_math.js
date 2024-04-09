@@ -156,6 +156,7 @@ export const getPosPoints = (pos, open) => {
     let eventIndex = 0;
     
     if(pos.days <= 1 || x_prices.length === 1) {
+        console.log(pos);
         if(pos.close_time) {
             let tvl = getUsdAtOpen(pos)*pos.days
             let fee = getClosedPosFees(pos)*1000
