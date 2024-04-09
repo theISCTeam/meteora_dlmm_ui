@@ -60,7 +60,6 @@ Returns USD value of claimed and unclaimed accumulated fees at current price
 export const getOpenPosFees = (pos) => {
     const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
     const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
-    console.log(price_x, price_y)
     const amt_x = ((pos.fees_x_claimed + pos.fees_x_unclaimed)*price_x.value)/10**pos.decimals_x;
     const amt_y = ((pos.fees_y_claimed + pos.fees_y_unclaimed)*price_y.value)/10**pos.decimals_y;
     return (amt_x+amt_y);
@@ -74,7 +73,6 @@ Returns USD value of accumulated fees at last price
 export const getClosedPosFees = (pos) => {
     const price_x = find_nearest_price_to_time(pos.x_prices, pos.close_time);
     const price_y = find_nearest_price_to_time(pos.y_prices, pos.close_time);
-    console.log(price_x, price_y)
     const amt_x = ((pos.fees_x / 10**pos.decimals_x)*price_x.value);
     const amt_y = ((pos.fees_y / 10**pos.decimals_y)*price_y.value);
     return Number((amt_x+amt_y));
@@ -203,5 +201,6 @@ export const getPosPoints = (pos, open) => {
         return {tvl:(points ? points : 0), fee: (fee ? fee : 0)}; 
     }
     let fee = getOpenPosFees(pos)*1000
+    console.log(fee);
     return {tvl:(points ? points : 0), fee:(fee ? fee : 0)};
 }
