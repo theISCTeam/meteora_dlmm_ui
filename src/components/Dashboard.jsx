@@ -186,7 +186,7 @@ export const Dashboard = () => {
         // Error Handler
         catch(e) {
             // handle and return custom error for each alert
-            alert("something went wrong, please retry. If the problem persists, please create your own Birdeye API Key and RPC Connection." + e);
+            alert("something went wrong, please retry." + e);
         }
         // Reset Loader States
         resetLoader(dots);
