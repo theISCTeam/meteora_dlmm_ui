@@ -68,13 +68,14 @@ export default async function parse_position (
         x_mint:parsed_position_data.x_mint,
         y_mint:parsed_position_data.y_mint,
         decimals_x, decimals_y,
+        open: parsed_position_data.open,
         position_adjustments:parsed_position_data.position_adjustments
     };
 };
 
 async function get_parsed_events_data (position_pubkey, program, API_KEY) {
     const {open_positions:pos} = await find_positions_with_events(position_pubkey, program);
-    return await parse_position_events(pos[Object.keys(pos)[0]], program, API_KEY);
+    return await parse_position_events(pos[Object.keys(pos)[0]], program, false);
 }
 
 async function get_upper_and_lower_bins(program, lb_pubkey, position_info) {

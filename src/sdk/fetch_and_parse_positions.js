@@ -1,4 +1,4 @@
-import { parse_closed_positions } from "./parse_position_events";
+import { parse_closed_positions, parse_open_positions } from "./parse_position_events";
 import { get_program_instance } from "./utils/get_program";
 import { Connection, PublicKey } from "@solana/web3.js"
 import { 
@@ -75,7 +75,7 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         program
     );
 
-    const parsed_open_position_events = await parse_closed_positions(
+    const parsed_open_position_events = await parse_open_positions(
         open_positions, 
         program
     );

@@ -18,7 +18,8 @@ import {
 */
 export async function parse_position_events (
     position_transactions, 
-    program
+    program,
+    open
     ) {
     let position = '' // Address
     let lbPair = ''  // Address
@@ -191,6 +192,7 @@ export async function parse_position_events (
         close_time,
         decimals_x,
         decimals_y,
+        open,
         x_mint : tokenXMint, y_mint: tokenYMint,
         range,
         // x_price : {open: xopen, last:xclose, all:xprices},
@@ -232,6 +234,31 @@ export const parse_closed_positions = async (
             await parse_position_events(
                 positions[key], 
                 program, 
+                false,
+            )
+        );
+    };
+    return parsed_positions;
+};
+
+/**
+ * Parses an array of positions
+ * @param  {Object[]} positions List of positions with events
+ * @param  {Program} program Anchor Program Instance
+ * @param  {String} API_KEY Birdeye API Key
+ * @return {Object[]} Returns an Object array with parsed positions
+*/
+export const parse_open_positions = async (
+    positions, 
+    program, 
+    ) => {
+    let parsed_positions = [];
+    for(let key in positions) {
+        parsed_positions.push(
+            await parse_position_events(
+                positions[key], 
+                program, 
+                true,
             )
         );
     };
