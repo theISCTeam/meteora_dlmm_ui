@@ -80,6 +80,8 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         program
     );
 
+    console.log(parsed_open_position_events);
+
     const {positionsV1, positionsV2} = await fetch_with_retry(
         find_account_open_positions, 
         pubkey, 
