@@ -21,8 +21,8 @@ export default async function parse_position (
     ) {
     const lb_pubkey = position_info.account.lbPair;
 
-    if (parsed_position_data === null) {return {position:'Error: No event data'}};
-    console.log(parsed_position_data);
+    if (parsed_position_data === undefined) {return {position:'Error: No event data'}};
+    // console.log(parsed_position_data);
     const decimals_x = parsed_position_data.decimals_x;
     const decimals_y = parsed_position_data.decimals_y;
     
@@ -139,7 +139,7 @@ function get_position_current_amount (
             }
             catch (e) {
                 position_share = new Decimal(0);
-                console.log(liquidity_shares[idx]);
+                // console.log(liquidity_shares[idx]);
             }
         }
 

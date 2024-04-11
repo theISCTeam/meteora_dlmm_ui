@@ -42,6 +42,7 @@ function App() {
 
     useEffect(() => {
         // console.log(tokens);
+        // console.log(pools);
     }, [pools, tokens]);
 
     useEffect(() => {

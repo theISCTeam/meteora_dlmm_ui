@@ -117,13 +117,14 @@ export const get_signatures_for_address_after_blocktime = async (pubkey, program
     let last_entry
     while (len === 1000) {
         const res = await program.provider.connection.getSignaturesForAddress(pubkey, {before:last_sig});
-
         len = res.length;
+        // console.log(len);
         last_entry = res[len - 1];
         last_sig = last_entry.signature;    
 
         if(earliest_time > last_entry.blockTime) {
             for(let i in res) {
+                // console.log(res[i].blockTime);
                 if(res[i].blockTime > earliest_time) {
                     signatures.push(res[i].signature);
                 }

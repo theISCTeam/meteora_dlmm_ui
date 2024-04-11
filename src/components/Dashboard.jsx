@@ -136,7 +136,6 @@ export const Dashboard = () => {
 
     // Main function
     const fetch = async (address) => {
-        const max_sigs = 2000;
         // Return if already loading
         if (loadingInfo) {return}
         const dots = startDotsInterval()
@@ -145,7 +144,14 @@ export const Dashboard = () => {
             const program = get_program_instance(connection);
             setLoadingInfo({step:1, maxSteps, text:"Getting Signatures..."});
             // Get and Set Signatures Count
-            const signatures = await getSignatures(address, program);
+            let signatures
+            try {
+                signatures = await getSignatures(address, program);
+            }
+            catch(e) {
+                alert('error while getting signatures ' + e)
+            }
+            console.log(signatures.length);
             // Butt ugly error handling but it does the job. God forgive me
             if(!signatures.length) {
                 resetLoader(dots);
@@ -186,7 +192,7 @@ export const Dashboard = () => {
         // Error Handler
         catch(e) {
             // handle and return custom error for each alert
-            alert("something went wrong, please retry." + e);
+            alert("something went wrong, please retry. " + e);
         }
         // Reset Loader States
         resetLoader(dots);

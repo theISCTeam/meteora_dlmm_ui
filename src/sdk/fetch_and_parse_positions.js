@@ -61,7 +61,7 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
     const program = get_program_instance(
         connection
     );
-    console.log(transactions);
+
     const { 
         closed_positions, 
         open_positions 
@@ -74,13 +74,11 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         closed_positions, 
         program
     );
-    console.log(open_positions);
+
     const parsed_open_position_events = await parse_open_positions(
         open_positions, 
         program
     );
-
-    console.log(parsed_open_position_events);
 
     const {positionsV1, positionsV2} = await fetch_with_retry(
         find_account_open_positions, 

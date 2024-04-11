@@ -195,8 +195,6 @@ export async function parse_position_events (
         open,
         x_mint : tokenXMint, y_mint: tokenYMint,
         range,
-        // x_price : {open: xopen, last:xclose, all:xprices},
-        // y_price : {open: yopen, last:yclose, all:yprices},
         position_adjustments
     };
 };  

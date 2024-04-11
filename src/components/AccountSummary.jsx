@@ -32,9 +32,7 @@ export const AccountSummary = () => {
         openPositions, 
         closedPositions,
         openSortedPositions,
-        closedSortedPositions,
-        setOpenSortedPositions,
-        setClosedSortedPositions
+        closedSortedPositions
     } = useContext(PositionsContext);
     const {
         disabledPools,
