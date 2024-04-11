@@ -69,7 +69,7 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         transactions,
         program
     );
-
+    console.log({open_positions, closed_positions});
     const parsed_closed_positions = await parse_closed_positions(
         closed_positions, 
         program
