@@ -151,8 +151,7 @@ export const Dashboard = () => {
             catch(e) {
                 alert('error while getting signatures ' + e)
             }
-            console.log(signatures.length);
-            // Butt ugly error handling but it does the job. God forgive me
+            // console.log(signatures.length);
             if(!signatures.length) {
                 resetLoader(dots);
                 if (!Object.keys(positions)) {
@@ -163,6 +162,7 @@ export const Dashboard = () => {
             setLoadingInfo({step:2, maxSteps, text:`Collecting ${signatures.length} Transactions...`});
             // fetch transactions and update loader txt each cycle 
             let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
+            console.log(transactions.length);
             if(!transactions.length) {
                 resetLoader(dots);
                 return alert('RPC Error: Failed to get Transactions');
