@@ -34,9 +34,9 @@ const fetch_and_sort_transactions_into_positions = async (transactions, program)
 export const fetch_parsed_transactions_from_signature_array = async (signatures, program) => {
     let parsed_transactions = [];
     let promises = []
-    for(let i = 0; i < signatures.length; i+=1000) {
+    for(let i = 0; i < signatures.length; i+=250) {
         try {
-            promises.push(program.provider.connection.getParsedTransactions(signatures.slice(i, i+1000), {maxSupportedTransactionVersion: 0}));
+            promises.push(program.provider.connection.getParsedTransactions(signatures.slice(i, i+250), {maxSupportedTransactionVersion: 0}));
         }
         catch(e) {
             throw new Error('Failed to get txs, retrying')
