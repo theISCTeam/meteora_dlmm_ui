@@ -2,10 +2,7 @@ import { Program } from "@coral-xyz/anchor";
 import { 
     fetch_with_retry,
     get_account_info, 
-    get_multiple_token_prices_history, 
-    get_multiple_token_prices_history_in_range, 
     get_token_info, 
-    get_token_metadata
 } from "./utils/utils";
 
 
@@ -80,12 +77,6 @@ export async function parse_position_events (
                     continue;
     
                 case 'PositionCreate':
-                    // position_adjustments.push({
-                    //     time:event.blocktime,
-                    //     action: 'open position',
-                    //     x_amount: 0,
-                    //     y_amount: 0,
-                    // });
                     range = event.range
                     position = event.data.position;
                     lbPair = event.data.lbPair;
@@ -93,18 +84,12 @@ export async function parse_position_events (
                     continue;
     
                 case 'PositionClose':
-                    // position_adjustments.push({
-                    //     time:event.blocktime,
-                    //     action: 'close position',
-                    //     x_amount: 0,
-                    //     y_amount: 0,
-                    // });
                     close_time = event.blocktime;     
                     continue;            
                 
                 default:
                     // Unhandled Event
-                    // console.log(`Unexpected event: "${event.name}" encountered while parsing position events`);
+                    console.log(`Unexpected event: "${event.name}" encountered while parsing position events`);
                     // console.log(event);
             }
         }
@@ -137,46 +122,6 @@ export async function parse_position_events (
     );
     
     let days = (close_time - open_time)/86400;
-    // let prices = [];
-    // if(days < 1) {
-    //     prices = await fetch_with_retry(
-    //         get_multiple_token_prices_history_in_range, 
-    //         [tokenXMint, tokenYMint], 
-    //         open_time, 
-    //         open_time + 86400,
-    //         API_KEY
-    //     );
-    // }
-    // else {
-    //     prices = await fetch_with_retry(
-    //         get_multiple_token_prices_history_in_range, 
-    //         [tokenXMint, tokenYMint], 
-    //         open_time, 
-    //         close_time, 
-    //         API_KEY
-    //     );
-    //     if(!prices.length) {
-    //         throw new Error('Price Api Is Cooked');
-    //     };
-    // };
-
-
-
-
-
-/*     const [ xprices, yprices ] = prices;
-    const xopen = xprices[0].value;
-    const yopen = yprices[0].value;
-    const xclose = xprices[xprices.length -1].value;
-    const yclose = yprices[yprices.length -1].value;
-
-    for(let i in position_adjustments) {
-        const time = position_adjustments[i].time;
-        position_adjustments[i].xprice = findNearestPriceToTime(xprices, time);
-        position_adjustments[i].yprice = findNearestPriceToTime(yprices, time);
-    }
-    
-    position_adjustments = position_adjustments.reverse() */
     
     return {
         position,

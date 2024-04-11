@@ -29,7 +29,6 @@ import {
     useEffect, 
     useState 
 } from 'react';
-import { DEFAULT_RPC } from '../constants';
 
 
 
@@ -37,7 +36,6 @@ export const Dashboard = () => {
     // Load Contexts
     const {pools} = useContext(PoolsContext)
     const {
-        rpc,
         apiKey, 
         connection
     } = useContext(ConnectionContext);
@@ -53,6 +51,7 @@ export const Dashboard = () => {
     const [ fetchInterval, setFetchInterval] = useState(undefined);
     const [ loadingInfo, setLoadingInfo ] = useState(undefined);
     const maxSteps = 4;
+    const dlmmStart = 1701388800; /* Dec  1st 2023 @ 00:00:00 */
 
     // Form Submit
     const handleSubmitAddress = async (e) => {;
@@ -70,7 +69,7 @@ export const Dashboard = () => {
             new PublicKey(address);
         }
         catch (e) {
-            console.log(e);
+            console.error(e);
             alert('invalid address')
             return;
         };
@@ -87,39 +86,62 @@ export const Dashboard = () => {
     };
 
     const find_or_get_prices = async (positions) => {
-        const keys = Object.keys(positions);
-        let allPos = [];
-        for(let key of keys) {
-            allPos = allPos.concat(positions[key]);
-        }
         let tokens = [];
         let storedPrices = Object.keys(tokenPrices);
         let newPrices = tokenPrices;
-        let newTokens = []
-        for(let position of allPos) {
-            if(tokens.indexOf(position.x_mint.toString()) === -1) {tokens.push(position.x_mint.toString())}
-            if(tokens.indexOf(position.y_mint.toString()) === -1) {tokens.push(position.y_mint.toString())}
+        let newTokens = [];
+
+        let all_positions = [];
+        for(let key of Object.keys(positions)) {
+            all_positions = [...all_positions, ...positions[key]];
+        }  
+
+        // Find all unique tokens in positions
+        for(let position of all_positions) {
+            let x_mint_s, y_mint_s;
+            try {
+                x_mint_s = position.x_mint.toString();
+                y_mint_s = position.y_mint.toString();
+            }
+            catch(e) {
+                console.log(e);
+            }
+
+            if(tokens.indexOf(x_mint_s) === -1) {tokens.push(x_mint_s)};
+            if(tokens.indexOf(y_mint_s) === -1) {tokens.push(y_mint_s)};
         };
+        
+        // Check If Token Prices Have Already Been Cached
         for(let token of tokens) {
             if (storedPrices.indexOf(token) === -1) {
                 newTokens.push(token);
-            }
-        }
+            };
+        };
+
+        // Fetch Prices For New Tokens
         let fetchedPrices
         if (newTokens.length) {
-            try {
-                fetchedPrices = await get_multiple_token_prices_history_in_range(newTokens, 1698796800, Math.round(Date.now()/1000), apiKey);
+            fetchedPrices = await get_multiple_token_prices_history_in_range(
+                newTokens, 
+                dlmmStart, 
+                Math.round(Date.now()/1000), 
+                apiKey
+            );
+            if(!fetchedPrices.length) {
+                throw new Error('No Prices Found')
             }
-            catch (e) {
-                return e
-            }
-        }
+        };
+        // If no new tokens, all needed prices are cached
+
+        // Create and set new cached prices object
         for(let i in newTokens) {
             newPrices[newTokens[i]] = fetchedPrices[i];
-        }
+        };
         setTokenPrices(newPrices);
+
+        // Append Prices to positions objects for processing
         let positionsWithPrices = {}
-        for(let key of keys) {
+        for(let key of Object.keys(positions)) {
             const curPos = positions[key];
             let posWithPrice = [];
             for(let position of curPos) {
@@ -130,73 +152,104 @@ export const Dashboard = () => {
                 })
             }
             positionsWithPrices[key] = posWithPrice;
-        }
+        };
+
         return positionsWithPrices;
     }
 
     // Main function
     const fetch = async (address) => {
         // Return if already loading
-        if (loadingInfo) {return}
-        const dots = startDotsInterval()
+        if (loadingInfo) {return};
+        
+        // Init Loading State
+        const dots = startDotsInterval();
+        setLoadingInfo({step:1, maxSteps, text:"Getting Signatures..."});
+        
+        // Initialize program instance
+        const program = get_program_instance(connection);
+        
+        // Get Signatures for address
+        let signatures
         try {
-            // Init Loading State
-            const program = get_program_instance(connection);
-            setLoadingInfo({step:1, maxSteps, text:"Getting Signatures..."});
-            // Get and Set Signatures Count
-            let signatures
-            try {
-                signatures = await getSignatures(address, program);
-            }
-            catch(e) {
-                alert('error while getting signatures ' + e)
-            }
-            // console.log(signatures.length);
+            signatures = await getSignatures(address, program);
             if(!signatures.length) {
-                resetLoader(dots);
-                if (!Object.keys(positions)) {
-                    resetLoader(dots)
-                    return alert('RPC Error: Failed to load signatures');
-                }
+                throw new Error('No Signatures Found!');
             }
-            setLoadingInfo({step:2, maxSteps, text:`Collecting ${signatures.length} Transactions...`});
-            // fetch transactions and update loader txt each cycle 
-            let transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
-            console.log(transactions.length);
+        }
+        catch(e) {
+            alert('Error while getting signatures: ' + e);
+            console.error(e)
+            resetLoader(dots);
+            return
+        }
+
+        // Get Transactions
+        setLoadingInfo({step:2, maxSteps, text:`Collecting ${signatures.length} Transactions...`});
+        let transactions
+        try {
+            transactions = await fetch_with_retry(fetch_parsed_transactions_from_signature_array, signatures, program);
             if(!transactions.length) {
-                resetLoader(dots);
-                return alert('RPC Error: Failed to get Transactions');
+                throw new Error('No Transactions Found');
             }
-            // Update loader to compiling positions
-            setLoadingInfo({step:3, maxSteps, text:`Compiling Transactions...`});
-            const positions = await fetch_and_parse_positions_for_account(address, transactions, connection);
+        }
+        catch(e) {
+            alert('Error while getting transactions: ' + e);
+            console.error(e)
+            resetLoader(dots);
+            return
+        }
+
+        // Process Transactions
+        setLoadingInfo({step:3, maxSteps, text:`Compiling Transactions...`});
+        let positions;
+        try{
+            positions = await fetch_and_parse_positions_for_account(address, transactions, connection);
             if (!Object.keys(positions)) {
-                resetLoader(dots)
-                return alert('RPC Error: Failed to parse positions');
+                throw new Error('No Positions Found');
             }
-            // update loader to getting prices and processing positions
-            setLoadingInfo({step:4, maxSteps, text:`Getting Prices...`});
-            const positions_with_prices = await find_or_get_prices(positions);
-            if (!Object.keys(positions_with_prices).length) {
-                resetLoader(dots)
-                return alert(positions_with_prices)
-            }
+        }
+        catch(e) {
+            alert('Error while compiling positions: ' + e);
+            console.error(e);
+            resetLoader(dots);
+            return;
+        }
+        console.log(positions);
+        // Get Prices
+        setLoadingInfo({step:4, maxSteps, text:`Getting Prices...`});
+        let positions_with_prices;
+        try {
+            positions_with_prices = await find_or_get_prices(positions);
+        }
+        catch(e) {
+            console.error(e);
+            alert('Error while getting prices: ' + e);
+            resetLoader(dots);
+            return;
+        }
+
+        // Set Positions States
+        try {
+            // calculate data to display
             const {open_positions, closed_positions} = process_positions(positions_with_prices, pools);
-            // set positions states
+            // set open positions 
             setOpenPositions([...open_positions]);
             setOpenSortedPositions([...open_positions]);
             // set closed positions
             setClosedPositions([...closed_positions]);
             setClosedSortedPositions([...closed_positions]);
         }
-        // Error Handler
         catch(e) {
-            // handle and return custom error for each alert
-            alert("something went wrong, please retry. " + e);
+            alert('Error while setting data: ' + e);
+            console.error(e);
         }
-        // Reset Loader States
-        resetLoader(dots);
+        finally{
+            resetLoader(dots);
+            return;
+        }
     }
+
     // Utils
     const startDotsInterval = () => {
         document.getElementById('submitAddressBtn').innerHTML = 'Searching';
@@ -208,14 +261,17 @@ export const Dashboard = () => {
                 wait.innerHTML += ".";
         }, 500);
     }
+
+    // Resets Loader to waiting state
     const resetLoader = (dots) => {
         clearInterval(dots)
         setLoadingInfo(undefined);
         document.getElementById('submitAddressBtn').innerHTML = 'Search'
     }
 
+    // Gets signatures for an address after DLMM launch date to conserve RPC and RAM 
     const getSignatures = async (address, program) => {
-        const blocktime = 1701388800 /* Dec  1st 2023 @ 00:00:00 */
+        const blocktime = dlmmStart
         const signatures = await fetch_with_retry(
             get_signatures_for_address_after_blocktime, 
             new PublicKey(address), 
@@ -224,9 +280,8 @@ export const Dashboard = () => {
         );
         return signatures;
     }
-    useEffect(() => {
-
-    }, [loadingInfo])
+    
+    // useEffect(() => {}, [loadingInfo]);
 
     return (
         <div id='tracker'>

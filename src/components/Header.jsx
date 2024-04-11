@@ -66,65 +66,6 @@ export const Header = () => {
                 <h1>ISC LABS - Meteora DLMM Dashboard </h1>
             </div>
                 <h2 id='announcement' className='textWhite pointer' onClick={() => {setAnnouncement(randomAnnouncement())}}>{announcement}</h2>
-            {/* <div className='headerForms'>
-                <form onSubmit={handleSubmitApi} id='apiForm'>
-                    <label for="apiInput">
-                        Birdeye.so API key (Free Tier Is Enough)
-                    </label>
-                    <br/>
-                    <input 
-                        type='text' 
-                        placeholder='Birdeye API key' 
-                        id='apiInput' 
-                        required 
-                    />
-                    <button>
-                        Save
-                    </button>
-                    <br/>
-                    <label>
-                        {apiKey === DEFAULT_BIRDEYE_KEY 
-                            ?<> 
-                                {"Default Connected"} 
-                                <ToolTipLow tooltip={
-                                    'There Is a Default API key, this is a shared '
-                                    + 'resource and is subject to significant '
-                                    + 'load at times which may cause slow or failed loading.'
-                                }/>
-                            </> 
-                            : "Custom API Key Connected"}
-                    </label>
-                </form>
-                <form onSubmit={handleSubmitRpc} id='rpcForm'>
-                    <label for="rpcInput">
-                        Solana RPC that allows Transaction fetches 
-                    </label>
-                    <br/>
-                    <input 
-                        type='text' 
-                        placeholder='RPC'
-                        id='rpcInput' 
-                        required 
-                    />
-                    <button>
-                        {'connect'}
-                    </button>
-                    <br/>
-                    <label>
-                        {rpc === DEFAULT_RPC 
-                            ? <> 
-                                {"Default Connected"}
-                                <ToolTipLow tooltip={
-                                    'There is a Default RPC, this is a shared resource '
-                                    + 'and is subject to significant load at times '
-                                    + 'which may cause slow or failed loading.'
-                                }/>
-                            </> 
-                            : "Custom RPC connected"
-                        }
-                    </label>
-                </form>
-            </div> */}
         </header>
     )
 }

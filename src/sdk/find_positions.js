@@ -1,6 +1,5 @@
-import { fetch_with_retry, get_signatures_for_address, sleep } from "./utils/utils";
 import parse_position  from "./parse_open_positions";
-import { BorshCoder, Program, utils } from "@coral-xyz/anchor";
+import { Program, utils } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import { PublicKey, TransactionResponse } from "@solana/web3.js";
 
@@ -14,16 +13,6 @@ export async function find_positions_with_events (transactions, program) {
     return sort_transaction_array_into_positions_with_events(transactions, program);
 }
 
-/**
- * Returns object array of position addresses with events
- * @param  {String} pubkey Address to search positions for
- * @param  {Program} program Anchor Program Instance
- * @return {Object[]} Returns a parsed Object array of  positions
- */
-const fetch_and_sort_transactions_into_positions = async (transactions, program) => {
-    if (!transactions.length) {throw new Error('Signatures are not an array')};
-    return sort_transaction_array_into_positions_with_events(transactions, program);
-}
 /**
  * Fetches transactions from signature array and returns object array of transactions
  * @param  {String[]} signatures List of signatures
@@ -105,8 +94,7 @@ const get_events_for_transaction = (tx, program) => {
                 if(event.name && event.name === 'RemoveLiquidity') {
                     event.bps = get_removed_bps(tx, program);
                 }
-                event.blocktime = tx.blockTime;
-                events.push(event);
+                event.blocktime = tx.blockTime;                events.push(event);
                 return 0;
             });
         });

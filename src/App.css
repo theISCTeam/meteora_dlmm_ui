@@ -217,15 +217,14 @@ form button {
     border:none;
     color: white;
     font-weight: bold;
-    font-weight: 400;
-    background-color: black;
+    font-weight: 600;
+    background-color:#000042;
     border-radius: 0px 15px 0px 0px;
-    transition: 0.3 ease;
+    transition: all 0.3s ease;
 }
 
-form button &:hover {
-    color: black;
-    background-color: #000042;
+form button:hover {
+    background-color:#4a3450;
 }
 
 form label {
@@ -485,11 +484,12 @@ input:-webkit-autofill:active  {
     min-width: max-content;
     color: white;
     border: none;
-    background:  linear-gradient(to top right,#726076 20%, #000042 90%);
+    align-self: center;
+    background: linear-gradient(to top right,#726076 20%, #000042 90%);
+    transition: all 0.2s ease-in;
 }
-
-.poolsSelector :hover {
-    color: gold;
+.poolsSelector:hover {
+    opacity: 0.7;
 }
 
 
