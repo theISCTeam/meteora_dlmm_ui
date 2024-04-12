@@ -19,6 +19,7 @@ import { fetch_with_retry,
 
 import { 
     ConnectionContext, 
+    ErrorContext, 
     PoolsContext, 
     PositionsContext, 
     PriceContext
@@ -29,6 +30,7 @@ import {
     useEffect, 
     useState 
 } from 'react';
+import { ErrorSlider } from './ErrorSlider';
 
 
 
@@ -46,7 +48,7 @@ export const Dashboard = () => {
         setClosedSortedPositions,
     } = useContext(PositionsContext);
     const {tokenPrices, setTokenPrices} = useContext(PriceContext);
-
+    const {setError} = useContext(ErrorContext)
     // Init States
     const [ fetchInterval, setFetchInterval] = useState(undefined);
     const [ loadingInfo, setLoadingInfo ] = useState(undefined);
@@ -70,7 +72,7 @@ export const Dashboard = () => {
         }
         catch (e) {
             console.error(e);
-            alert('invalid address')
+            setError('invalid address')
             return;
         };
 
@@ -178,7 +180,7 @@ export const Dashboard = () => {
             }
         }
         catch(e) {
-            alert('Error while getting signatures: ' + e);
+            setError('Error while getting signatures: ' + e);
             console.error(e)
             resetLoader(dots);
             return
@@ -194,7 +196,7 @@ export const Dashboard = () => {
             }
         }
         catch(e) {
-            alert('Error while getting transactions: ' + e);
+            setError('Error while getting transactions: ' + e);
             console.error(e)
             resetLoader(dots);
             return
@@ -210,7 +212,7 @@ export const Dashboard = () => {
             }
         }
         catch(e) {
-            alert('Error while compiling positions: ' + e);
+            setError('Error while compiling positions: ' + e);
             console.error(e);
             resetLoader(dots);
             return;
@@ -224,7 +226,7 @@ export const Dashboard = () => {
         }
         catch(e) {
             console.error(e);
-            alert('Error while getting prices: ' + e);
+            setError('Error while getting prices: ' + e);
             resetLoader(dots);
             return;
         }
@@ -241,7 +243,7 @@ export const Dashboard = () => {
             setClosedSortedPositions([...closed_positions]);
         }
         catch(e) {
-            alert('Error while setting data: ' + e);
+            setError('Error while setting data: ' + e);
             console.error(e);
         }
         finally{
@@ -285,6 +287,7 @@ export const Dashboard = () => {
 
     return (
         <div id='tracker'>
+            <ErrorSlider/>
             <form onSubmit={handleSubmitAddress} id='addressForm' className='form'>
                 <label for="addressInput">Solana Address 
                     <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >

@@ -141,7 +141,7 @@ export const formatBigNum = (value) => {
 
 export const getPosPoints = (pos, open) => {
     if(!pos.position_adjustments.length){
-        return {fee:0, tvl:0}
+        return {fee:0, tvl:0, totalPoints:0}
     }
     const events = pos.position_adjustments;
     const max_events = events.length - 1;
@@ -159,12 +159,12 @@ export const getPosPoints = (pos, open) => {
         if(!pos.open) {
             let tvl = getUsdAtOpen(pos)*pos.days
             let fee = getClosedPosFees(pos)*1000
-            return ({tvl:(tvl ? tvl : 0), fee:(fee ? fee : 0)});
+            return ({tvl:(tvl ? tvl : 0), fee:(fee ? fee : 0),totalPoints:(tvl? tvl : 0) + (fee ? fee : 0)});
         };
-        let tvl = getUsdAtOpen(pos)*pos.days
-        let fee = getOpenPosFees(pos)*1000
+        let tvl = getUsdAtOpen(pos)*pos.days;
+        let fee = getOpenPosFees(pos)*1000;
         // console.log(fee);
-        return ({tvl:(tvl ? tvl : 0), fee:(fee ? fee : 0)});
+        return ({tvl:(tvl ? tvl : 0), fee:(fee ? fee : 0),totalPoints:(tvl ? tvl : 0) + (fee ? fee : 0) });
     };
 
     const points_arr = x_prices.map((entry, i) => {
@@ -199,9 +199,9 @@ export const getPosPoints = (pos, open) => {
     }
     if(!open) {
         let fee = getClosedPosFees(pos)*1000
-        return {tvl:(points ? points : 0), fee: (fee ? fee : 0)}; 
+        return {tvl:(points ? points : 0), fee: (fee ? fee : 0), totalPoints:(points ? points : 0) + (fee ? fee : 0)}; 
     }
     let fee = getOpenPosFees(pos)*1000
     // console.log(fee);
-    return {tvl:(points ? points : 0), fee:(fee ? fee : 0)};
+    return {tvl:(points ? points : 0), fee:(fee ? fee : 0), totalPoints:(points ? points : 0) + (fee ? fee : 0)};
 }

@@ -108,12 +108,14 @@ header {
     min-height: 200px;
     padding-bottom: 20px;
 }
+
 #announcement {
     position: absolute;
     bottom: 20px;
     font-size: 1.5em;
     transition: all 0.5s ease;
 }
+
 header img {
     height:75px;
 }
@@ -515,4 +517,44 @@ footer h2{
 
 .greyscale {
     filter: grayscale(1);
+}
+
+
+.errorSlider {
+    z-index: 100;
+    position: fixed;
+    padding: 15px;
+    top: 50px;
+    height: max-content;
+    left: -400px;
+    width: 300px;
+    border-radius: 10px;
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.767);
+    color: white;
+    font-size: large;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 1s ease;
+    gap: 15px;
+}
+.errorSlider img {
+    height: 75px;
+    border-radius: 10px;
+}
+
+.errorSlider button {
+    cursor: pointer;
+    background-color: red;
+    color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-color: white;
+    border: 1px solid white;
+    border-radius:0px 10px 0px 10px;
 }

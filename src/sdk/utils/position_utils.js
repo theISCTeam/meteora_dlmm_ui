@@ -79,7 +79,7 @@ export const process_positions = (positions, pools) => {
             const PnL =  lastValue - usdHodl + fees;
             const days = pos.days;
 
-            const points = getPosPoints(
+            const {tvl, fee, totalPoints} = getPosPoints(
                 pos, 
                 key === 'open_positions'
             );
@@ -94,7 +94,8 @@ export const process_positions = (positions, pools) => {
 
             return {
                 ...pos, 
-                points, 
+                points:{tvl, fee},
+                totalPoints, 
                 oDateStr, 
                 cDateStr, 
                 currentPrice, 

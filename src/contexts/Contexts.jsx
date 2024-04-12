@@ -6,3 +6,4 @@ export const PoolsContext = createContext([]);
 export const TokenContext = createContext([]);
 export const FilterContext = createContext([]);
 export const PriceContext = createContext({});
+export const ErrorContext = createContext({});

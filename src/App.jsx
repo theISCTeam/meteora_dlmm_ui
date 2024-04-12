@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { 
     ConnectionContext, 
+    ErrorContext, 
     PoolsContext, 
     PositionsContext, 
     PriceContext
@@ -29,6 +30,7 @@ function App() {
     const [ tokens, setTokens ] = useState([]);
     const [ usedTokensList, setUsedTokensList ] = [];
     const [ tokenPrices, setTokenPrices ] = useState({});
+    const [error, setError] = useState(undefined)
 
     useEffect(() => {
         const getPools = async () => {
@@ -74,11 +76,13 @@ function App() {
                     setClosedSortedPositions
                 }}>
                     <PriceContext.Provider value={{tokenPrices, setTokenPrices}}>
-                        <div className="App">
-                            <Header/>
-                            <Dashboard/>
-                            <Footer/>
-                        </div>
+                        <ErrorContext.Provider value={{error, setError}} >
+                            <div className="App">
+                                <Header/>
+                                <Dashboard/>
+                                <Footer/>
+                            </div>
+                        </ErrorContext.Provider>
                     </PriceContext.Provider>
                 </PositionsContext.Provider>
             </PoolsContext.Provider>

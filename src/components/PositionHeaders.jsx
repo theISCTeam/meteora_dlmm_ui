@@ -117,7 +117,7 @@ export const PositionHeaders = ({open}) => {
             <PositionHeader  objKey={'lastValue'}     title={'DLMM ($)'}              tooltip={tooltips.strategy}  />
             <PositionHeader  objKey={'fees'}          title={'Fees ($)'}              tooltip={tooltips.fees}      />
             <PositionHeader  objKey={'PnL'}           title={'PnL ($)'}               tooltip={tooltips.pnl}       />
-            <PositionHeader  objKey={'points'}        title={'Estimated MET Points'}  tooltip={tooltips.points}    />
+            <PositionHeader  objKey={'totalPoints'}        title={'Estimated MET Points'}  tooltip={tooltips.points}    />
         </tr>
     )
 }
