@@ -187,7 +187,10 @@ export const getPosPoints = (pos, open) => {
             }
         }
         if(i+1 <= x_prices.length -1) {
-            return (((amt_x/10**pos.decimals_x)*x_prices[i].value) + ((amt_y/10**pos.decimals_y)*y_prices[i].value))*((x_prices[i+1].unixTime-entry.unixTime)/86400)
+            const x_price = x_prices[i] ? x_prices[i].value : 0;
+            const y_price = y_prices[i] ? y_prices[i].value : 0;
+            const next_time = x_prices[i+1].unixTime;
+            return (((amt_x/10**pos.decimals_x)*x_price) + ((amt_y/10**pos.decimals_y)*y_price))*((next_time-entry.unixTime)/86400)
         }
         else {
             return 0;

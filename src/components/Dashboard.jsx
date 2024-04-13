@@ -217,7 +217,6 @@ export const Dashboard = () => {
             resetLoader(dots);
             return;
         }
-        console.log(positions);
         // Get Prices
         setLoadingInfo({step:4, maxSteps, text:`Getting Prices...`});
         let positions_with_prices;

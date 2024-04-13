@@ -189,7 +189,6 @@ export async function get_multiple_token_prices_history_in_range (mints, start, 
             {headers:headers}
         );
         const data = await res.json();
-
         if(data.status === 401) {
             throw new Error('invalid API key');
         }
