@@ -195,7 +195,7 @@ export async function get_multiple_token_prices_history_in_range (mints, start, 
         if(data.status === 403) {
             throw new Error('rate limit exceeded, please create your own Birdeye API key');
         }
-        
+        console.log(data);
         responses.push(data.data.items);
     };
     return responses;
