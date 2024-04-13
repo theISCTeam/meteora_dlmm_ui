@@ -123,7 +123,8 @@ export const Dashboard = () => {
         // Fetch Prices For New Tokens
         let fetchedPrices
         if (newTokens.length) {
-            fetchedPrices = await get_multiple_token_prices_history_in_range(
+            fetchedPrices = await fetch_with_retry(
+                get_multiple_token_prices_history_in_range,
                 newTokens, 
                 dlmmStart, 
                 Math.round(Date.now()/1000), 
