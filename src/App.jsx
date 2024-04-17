@@ -13,11 +13,17 @@ import {
     PositionsContext, 
     PriceContext
 } from './contexts/Contexts';
-import { DEFAULT_RPC, DEFAULT_BIRDEYE_KEY } from './constants';
+// import { DEFAULT_RPC, DEFAULT_BIRDEYE_KEY } from './constants';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 
 function App() {
+
+    const DEFAULT_RPC = process.env.REACT_APP_RPC
+    const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY
+    console.log(DEFAULT_RPC);
+    console.log(DEFAULT_BIRDEYE_KEY);
+
     const [ rpc, setRpc ] = useState(DEFAULT_RPC);
     const [ apiKey, setApiKey ] = useState(DEFAULT_BIRDEYE_KEY);
     const [ connection, setConnection ] = useState(new Connection(DEFAULT_RPC));
@@ -31,7 +37,6 @@ function App() {
     const [ usedTokensList, setUsedTokensList ] = [];
     const [ tokenPrices, setTokenPrices ] = useState({});
     const [error, setError] = useState(undefined)
-
     useEffect(() => {
         const getPools = async () => {
             let pls = await get_pools(connection);

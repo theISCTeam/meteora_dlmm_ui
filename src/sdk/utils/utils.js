@@ -179,11 +179,11 @@ Returns price entries for an array of tokens between start and end timestamps
 * @return {String[]} Array of signatures
 */
 export async function get_multiple_token_prices_history_in_range (mints, start, end, API_KEY) { 
-    const base_url = 'https://public-api.birdeye.so/public/history_price';
+    const base_url = 'https://public-api.birdeye.so/defi/history_price';
     const headers = {'X-API-KEY':API_KEY};
     let responses = [];
     for(let mint of mints) {
-        const url = `${base_url}?address=${mint}&address_type=token&time_from=${start}&time_to=${end}`;
+        const url = `${base_url}?address=${mint}&type=15m&address_type=token&time_from=${start}&time_to=${end}`;
         const res = await fetch(
             url, 
             {headers:headers}

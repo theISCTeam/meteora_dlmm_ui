@@ -1,5 +1,5 @@
-export const DEFAULT_BIRDEYE_KEY = 'dd0abee4829046c49d1052b3a78d6afd'
-export const DEFAULT_RPC = 'https://mainnet.helius-rpc.com/?api-key=648bd1c2-cb78-433a-9fbc-178afdc93f9b'
+export const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY
+export const DEFAULT_RPC = process.env.REACT_APP_RPC
 
 export const announcements = [
     'Now With More Cats!',
