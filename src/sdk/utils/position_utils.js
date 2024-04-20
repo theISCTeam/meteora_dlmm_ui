@@ -56,14 +56,21 @@ export const process_positions = (positions, pools) => {
         processed_positions[key] = categoryPositions.map((pos) => {
             let lastValue, fees, lowerBinPrice, upperBinPrice;
 
-            const lbInfo = pools.find((e) => e.address === pos.lbPair.toString());
-
-            if(!lbInfo.name) {
-                console.log(lbInfo);
+            let symbols;
+            let lbInfo;
+            try {
+                lbInfo = pools.find((e) => e.address === pos.lbPair.toString());
+                
+                // this fails sometimes, finding out why
+                if(!lbInfo.name) {
+                    console.log(lbInfo);
+                }
+    
+                symbols = lbInfo.name.split('-');
             }
-
-            const symbols = lbInfo.name.split('-');
-
+            catch(e){
+                console.log(e);
+            }
             const usdHodl = getUsdAtOpen(pos);
             const tokenHodl = getTokenHodl(pos);
 

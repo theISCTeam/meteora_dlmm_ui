@@ -19,11 +19,8 @@ import { Footer } from './components/Footer';
 
 function App() {
 
-    const DEFAULT_RPC = process.env.REACT_APP_RPC
-    const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY
-    console.log(DEFAULT_RPC);
-    console.log(DEFAULT_BIRDEYE_KEY);
-
+    const DEFAULT_RPC = process.env.REACT_APP_RPC;
+    const DEFAULT_BIRDEYE_KEY = process.env.REACT_APP_API_KEY;
     const [ rpc, setRpc ] = useState(DEFAULT_RPC);
     const [ apiKey, setApiKey ] = useState(DEFAULT_BIRDEYE_KEY);
     const [ connection, setConnection ] = useState(new Connection(DEFAULT_RPC));

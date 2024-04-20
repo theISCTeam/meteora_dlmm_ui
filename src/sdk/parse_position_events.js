@@ -151,11 +151,14 @@ export async function parse_position_events (
  * @return {Object} Returns an Object containing 2 Object arrays of Positions
 */
 export const find_nearest_price_to_time = (prices, time) => {
-    for(let i in prices) {
-        if(!prices[i+1]) {return prices[i]}
-        else if(prices[i].time <= time && prices[i+0] >= time) {
-            return prices[i].value;
-        };
+    for(let i = 0; i < prices.length; i++) {
+        if(i === prices.length-1) {
+            return prices[i-1]
+        }
+        else if (i === 0) {continue;}
+        else if(Number(prices[i].unixTime) <= Number(time) && Number(prices[i+1].unixTime) >= Number(time)) {
+            return prices[i]
+        }
     };
 };
 
