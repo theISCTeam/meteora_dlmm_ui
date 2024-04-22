@@ -44,8 +44,6 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         }
     }
 
-    console.log(parsed_closed_positions_unfiltered);
-    
     const parsed_open_position_events_unfiltered = await parse_open_positions(
         open_positions, 
         program
@@ -58,7 +56,6 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
             parsed_open_position_events.push(p)
         }
     }
-    console.log(parsed_open_position_events);
 
     let {positionsV1, positionsV2} = await find_account_open_positions(
         pubkey, 

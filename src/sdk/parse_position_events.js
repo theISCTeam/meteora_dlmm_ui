@@ -31,7 +31,6 @@ export async function parse_position_events (
     let position_adjustments = [] // Entries
     let range;
 
-    console.log(position_transactions);
     if(position_transactions[position_transactions.length -1][0].name !== "PositionCreate") {
         return {}
     }

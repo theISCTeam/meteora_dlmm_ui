@@ -62,8 +62,9 @@ export const process_positions = (positions, pools) => {
                 lbInfo = pools.find((e) => e.address === pos.lbPair.toString());
                 
                 // this fails sometimes, finding out why
-                if(!lbInfo.name) {
+                if(!lbInfo) {
                     console.log(lbInfo);
+                    symbols = ["Err", "Err"]
                 }
     
                 symbols = lbInfo.name.split('-');
