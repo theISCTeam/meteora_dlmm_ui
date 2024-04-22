@@ -94,7 +94,8 @@ const get_events_for_transaction = (tx, program) => {
                 if(event.name && event.name === 'RemoveLiquidity') {
                     event.bps = get_removed_bps(tx, program);
                 }
-                event.blocktime = tx.blockTime;                events.push(event);
+                event.blocktime = tx.blockTime;                
+                events.push(event);
                 return 0;
             });
         });

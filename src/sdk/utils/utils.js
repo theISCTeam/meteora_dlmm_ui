@@ -20,13 +20,14 @@ export async function fetch_with_retry (callback, ...params) {
     const maxRetries = 5;
     let retries = 0;
     let error;
+    // console.log(callback);
     while(retries < maxRetries) {
       try {
         return await callback(...params);
       } catch (e) {
         retries++;
         error = e;
-        console.log('waiting 500ms to fetch again function: ' + callback.name + e);
+        console.log('waiting 500ms to fetch again function: ' + callback + e);
         await sleep(500)
       }
     }
@@ -68,6 +69,7 @@ Gets and returns program account info
 * @return Resolved Promise
 */
 export async function get_account_info (account, program) {
+    // console.log(account );
     const info = await program.provider.connection.getAccountInfo(account);
     const decoded_info = program.coder.accounts.decodeAny(info.data);
     return decoded_info;

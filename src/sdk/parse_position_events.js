@@ -30,6 +30,12 @@ export async function parse_position_events (
     let close_time = Math.floor(Date.now()/1000); // Timestamp
     let position_adjustments = [] // Entries
     let range;
+
+    console.log(position_transactions);
+    if(position_transactions[position_transactions.length -1][0].name !== "PositionCreate") {
+        return {}
+    }
+
     for(let key in position_transactions) {
         const events = position_transactions[key];
         // console.log(events);
@@ -77,6 +83,7 @@ export async function parse_position_events (
                     continue;
     
                 case 'PositionCreate':
+                    // console.log(event);
                     range = event.range
                     position = event.data.position;
                     lbPair = event.data.lbPair;
@@ -86,7 +93,7 @@ export async function parse_position_events (
                 case 'PositionClose':
                     close_time = event.blocktime;     
                     continue;            
-                
+                    
                 default:
                     // Unhandled Event
                     console.log(`Unexpected event: "${event.name}" encountered while parsing position events`);
@@ -94,8 +101,8 @@ export async function parse_position_events (
             }
         }
     };
-
-    if(!lbPair) {return null};
+    
+    // if(!lbPair) {return null};
     const { 
         tokenXMint, 
         tokenYMint 

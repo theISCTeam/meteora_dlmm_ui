@@ -19,6 +19,7 @@ export default async function parse_position (
     version,
     parsed_position_data,
     ) {
+    console.log("HANDLING OPEN POSITION");
     const lb_pubkey = position_info.account.lbPair;
 
     if (parsed_position_data === undefined) {return {position:'Error: No event data'}};
