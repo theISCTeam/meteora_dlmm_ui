@@ -40,45 +40,66 @@ export async function parse_position_events (
         // console.log(events);
         for (let i in events) {
             const event = events[i]
+            let num_x, num_y;
             switch (event.name) {
                 case 'AddLiquidity':
-                    if (event.data.amounts[0].toNumber() + event.data.amounts[1].toNumber() !== 0) {
-                        position_adjustments.push({
-                            time:event.blocktime,
-                            action: 'add liquidity',
-                            x_amount: event.data.amounts[0].toNumber(),
-                            y_amount: event.data.amounts[1].toNumber(),
-                        });
-                    };
-                    initial_x += event.data.amounts[0].toNumber();
-                    initial_y += event.data.amounts[1].toNumber();
+                    try{
+                        num_x = event.data.amounts[0].toNumber()
+                        num_y = event.data.amounts[1].toNumber()
+                    }
+                    catch(e) {
+                        num_x = 0;
+                        num_y = 0;
+                    }
+                    position_adjustments.push({
+                        time:event.blocktime,
+                        action: 'add liquidity',
+                        x_amount: num_x,
+                        y_amount: num_y,
+                    });
+
+                    initial_x += num_x;
+                    initial_y += num_y;
                     continue;
                 
                 case 'ClaimFee':
-                    if (event.data.feeX.toNumber() + event.data.feeY.toNumber() !== 0) {
-                        position_adjustments.push({
-                            time:event.blocktime,
-                            action: 'claim fees',
-                            x_amount: event.data.feeX.toNumber(),
-                            y_amount: event.data.feeY.toNumber(),
-                        });
-                    };
-                    fees_x += event.data.feeX.toNumber();
-                    fees_y += event.data.feeY.toNumber();
+                    try{
+                        num_x = event.data.feeX.toNumber();
+                        num_y = event.data.feeY.toNumber();
+                    }
+                    catch(e) {
+                        num_x = 0;
+                        num_y = 0;
+                    }
+                    position_adjustments.push({
+                       time:event.blocktime,
+                       action: 'claim fees',
+                       x_amount: num_x,
+                       y_amount: num_y,
+                    });
+
+                    fees_x += num_x;
+                    fees_y += num_y;
                     continue;
                     
                 case 'RemoveLiquidity':
-                    if (event.data.amounts[0].toNumber() + event.data.amounts[1].toNumber() !== 0) {
-                        position_adjustments.push({
-                            time:event.blocktime,
-                            action: 'withdraw liquidity',
-                            x_amount: event.data.amounts[0].toNumber(),
-                            y_amount: event.data.amounts[1].toNumber(),
-                            bps: event.bps
-                        });
-                    };
-                    final_x += event.data.amounts[0].toNumber();
-                    final_y += event.data.amounts[1].toNumber();
+                    try{
+                        num_x = event.data.amounts[0].toNumber()
+                        num_y = event.data.amounts[1].toNumber()
+                    }
+                    catch(e) {
+                        num_x = 0;
+                        num_y = 0;
+                    }
+                    position_adjustments.push({
+                        time:event.blocktime,
+                        action: 'withdraw liquidity',
+                        x_amount: num_x,
+                        y_amount: num_y,
+                        bps: event.bps
+                    });
+                    final_x += num_x;
+                    final_y += num_y;
                     continue;
     
                 case 'PositionCreate':
