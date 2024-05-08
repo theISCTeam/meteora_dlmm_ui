@@ -73,16 +73,12 @@ export default async function parse_position (
     };
 };
 
-async function get_parsed_events_data (position_pubkey, program, API_KEY) {
-    const {open_positions:pos} = await find_positions_with_events(position_pubkey, program);
-    return await parse_position_events(pos[Object.keys(pos)[0]], program, false);
-}
-
 async function get_upper_and_lower_bins(program, lb_pubkey, position_info) {
     let binArrays = [];
-    (await program.account.binArray.all()).forEach((a) => {
+    console.log(await program.account);
+    (await program.account.binArrays.all()).forEach((a) => {
         if (a.account.lbPair.toString() === lb_pubkey.toString()) {
-            binArrays.push(a)
+            binArrays.push(a);
         };
     });
     

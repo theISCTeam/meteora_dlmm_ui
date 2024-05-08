@@ -128,10 +128,10 @@ export const formatBigNum = (value) => {
     if (value > 1 && value < 1000) {
         return value.toFixed(2)
     }
-    else if (value > 1000 &&  value < 10**6) {
+    else if (value > 1000 &&  value < 10**6 || value < -1000 &&  value > -(10**6)) {
         return (value/1000).toFixed(2) + "K"
     }
-    else if (value > 10**6) {
+    else if (value > 10**6 || value < -(10**6)) {
         return (value/10**6).toFixed(2) + "M"
     }
     else {

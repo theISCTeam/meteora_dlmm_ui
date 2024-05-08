@@ -185,7 +185,7 @@ export async function get_multiple_token_prices_history_in_range (mints, start, 
     const headers = {'X-API-KEY':API_KEY};
     let responses = [];
     for(let mint of mints) {
-        const url = `${base_url}?address=${mint}&type=15m&address_type=token&time_from=${start}&time_to=${end}`;
+        const url = `${base_url}?address=${mint}&type=1H&address_type=token&time_from=${start}&time_to=${end}`;
         const res = await fetch(
             url, 
             {headers:headers}

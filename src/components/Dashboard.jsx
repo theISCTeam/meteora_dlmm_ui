@@ -56,7 +56,7 @@ export const Dashboard = () => {
     const dlmmStart = 1701388800; /* Dec  1st 2023 @ 00:00:00 */
 
     // Form Submit
-    const handleSubmitAddress = async (e) => {;
+    const handleSubmitAddress = async (e) => {
         e.preventDefault();
 
         // Clears Previous Auto Refresh
@@ -288,16 +288,22 @@ export const Dashboard = () => {
     return (
         <div id='tracker'>
             <ErrorSlider/>
-            <form onSubmit={handleSubmitAddress} id='addressForm' className='form'>
-                <label for="addressInput">Solana Address 
-                    <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >
-                </label>
-                <br/>
-                <div id='addressFormWrapper'>
-                    <input type='text' placeholder='Solana Address' id='addressInput' required size={42}/>
-                    <button type='submit' id='submitAddressBtn'>Search</button>
-                </div>
-            </form>
+            {
+                pools[0] !== undefined
+                ?
+                    <form onSubmit={handleSubmitAddress} id='addressForm' className='form'>
+                        <label for="addressInput">Solana Address 
+                            <ToolTip tooltip={"Wallets with many signatures will take a while to load"}/ >
+                        </label>
+                        <br/>
+                        <div id='addressFormWrapper'>
+                            <input type='text' placeholder='Solana Address' id='addressInput' required size={42}/>
+                            <button type='submit' id='submitAddressBtn'>Search</button>
+                        </div>
+                    </form>
+                :
+                    <></>
+            }
 
             {
                 loadingInfo 

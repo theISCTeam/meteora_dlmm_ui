@@ -1,3 +1,4 @@
+import { formatBigNum } from "../sdk/utils/position_math";
 
   /**
    * A table cell that takes a numerical value and displays it in either red or green with customization options.
@@ -47,18 +48,18 @@ export const GreenRedTd = (
         return (
             value >= 0 
             ?
-            <td className={greenClasses}>{prefix}{value.toLocaleString()}{postfix}</td>
+            <td className={greenClasses}>{prefix}{formatBigNum(value)}{postfix}</td>
             :
-            <td className={redClasses}>{prefix}{value.toLocaleString()}{postfix}</td>
+            <td className={redClasses}>{prefix}{formatBigNum(value)}{postfix}</td>
         )
     }
     else {
         return (
             value >= 0 
             ?
-            <td className={greenClasses}>{prefix}{value.toLocaleString()}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
+            <td className={greenClasses}>{prefix}{formatBigNum(value)}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
             :
-            <td className={redClasses}>{prefix}{value.toLocaleString()}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
+            <td className={redClasses}>{prefix}{formatBigNum(value)}{postfix} <br/> ({((value/base)*100).toLocaleString()}%)</td>
         )
     };
 };

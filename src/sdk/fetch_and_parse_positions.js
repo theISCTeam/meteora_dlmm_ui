@@ -29,7 +29,6 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         transactions,
         program
     );
-    console.log({open_positions});
 
     const parsed_closed_positions_unfiltered = await parse_closed_positions(
         closed_positions, 
@@ -44,26 +43,26 @@ export async function fetch_and_parse_positions_for_account (address_string, tra
         }
     }
 
-    const parsed_open_position_events_unfiltered = await parse_open_positions(
-        open_positions, 
-        program
-    );
-    let parsed_open_position_events = []
-    for (let i in parsed_open_position_events_unfiltered){
-        const p = parsed_open_position_events_unfiltered[i]
+    // const parsed_open_position_events_unfiltered = await parse_open_positions(
+    //     open_positions, 
+    //     program
+    // );
+    // let parsed_open_position_events = []
+    // for (let i in parsed_open_position_events_unfiltered){
+    //     const p = parsed_open_position_events_unfiltered[i]
 
-        if (Object.keys(p).length > 0){
-            parsed_open_position_events.push(p)
-        }
-    }
+    //     if (Object.keys(p).length > 0){
+    //         parsed_open_position_events.push(p)
+    //     }
+    // }
 
-    let {positionsV1, positionsV2} = await find_account_open_positions(
-        pubkey, 
-        program, 
-        parsed_open_position_events
-    );
+    // let {positionsV1, positionsV2} = await find_account_open_positions(
+    //     pubkey, 
+    //     program, 
+    //     parsed_open_position_events
+    // );
 
-
+    let positionsV1, positionsV2
     if(!positionsV1) {
         positionsV1 = []
     }
