@@ -75,8 +75,8 @@ export default async function parse_position (
 
 async function get_upper_and_lower_bins(program, lb_pubkey, position_info) {
     let binArrays = [];
-    console.log(await program.account);
-    (await program.account.binArrays.all()).forEach((a) => {
+
+    (await program.account.binArray.all()).forEach((a) => {
         if (a.account.lbPair.toString() === lb_pubkey.toString()) {
             binArrays.push(a);
         };
